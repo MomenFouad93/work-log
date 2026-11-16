@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>شغلي | My Work Log</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="شغلي">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#242269">
+<style>
+:root{--navy:#242269;--coral:#F55B41;--green:#91C361;--blue:#323C8E;--purple:#9B7DCD;--gold:#FDC300;--lblue:#D3DEF2;--cyan:#47BFD9;--alt:#F4F5FA;--line:#dfe2ec;--ink:#1d1d2b;--muted:#6b6f86;--red:#D9534F}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{font-family:"Century Gothic","CenturyGothic","AppleGothic","Futura","Segoe UI",Tahoma,sans-serif;background:var(--alt);color:var(--ink);font-size:16px;padding-bottom:calc(68px + env(safe-area-inset-bottom))}
+button,input,select,textarea{font:inherit;color:inherit}
+header{background:var(--navy);color:#fff;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;display:flex;align-items:center;gap:10px;border-top:5px solid var(--coral);position:sticky;top:0;z-index:5}
+header h1{font-size:18px;margin:0;flex:1}
+header small{display:block;font-size:12px;opacity:.75;font-weight:400}
+main{padding:14px 14px 20px;max-width:720px;margin:0 auto}
+.tab{display:none}.tab.on{display:block}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.card h3{margin:0 0 10px;font-size:15px;color:var(--navy)}
+label{display:block;font-size:13px;font-weight:700;color:var(--navy);margin:10px 0 4px}
+input,select,textarea{width:100%;border:1px solid #c5cbe0;border-radius:10px;padding:11px 12px;background:#fff;font-size:16px}
+textarea{min-height:96px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{border:0;border-radius:12px;padding:13px 16px;font-weight:700;cursor:pointer;font-size:16px}
+.btn.main{background:var(--coral);color:#fff}
+.btn.navy{background:var(--navy);color:#fff}
+.btn.ghost{background:#fff;color:var(--navy);border:1px solid #c5cbe0}
+.btn.red{background:#fff;color:var(--red);border:1px solid var(--red)}
+.btn.block{width:100%}
+.btn:disabled{opacity:.5}
+.mic{width:84px;height:84px;border-radius:50%;background:var(--coral);border:0;display:flex;align-items:center;justify-content:center;margin:6px auto 4px;box-shadow:0 6px 18px rgba(245,91,65,.4)}
+.mic svg{width:38px;height:38px;fill:#fff}
+.mic.rec{background:var(--red);animation:pulse 1.1s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(217,83,79,.55)}100%{box-shadow:0 0 0 26px rgba(217,83,79,0)}}
+.center{text-align:center}.muted{color:var(--muted);font-size:13px}
+.hint{background:#FFF4C2;color:#5b4a00;border-radius:10px;padding:10px 12px;font-size:13px;margin-bottom:12px}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.kpi{border-radius:12px;padding:12px 14px;color:#fff}.kpi b{display:block;font-size:24px}.kpi span{font-size:12px;opacity:.92}
+.bar{display:grid;grid-template-columns:120px 1fr 38px;gap:8px;align-items:center;font-size:13px;margin:7px 0}
+.bar .t{height:12px;background:var(--alt);border-radius:6px;overflow:hidden}.bar .t i{display:block;height:100%;background:var(--blue);border-radius:6px}
+.bar .n{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.bar .v{text-align:left;color:var(--muted)}
+.item{background:#fff;border:1px solid var(--line);border-right:5px solid var(--coral);border-radius:12px;padding:11px 12px;margin-bottom:9px}
+.item .top{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted)}
+.item .ti{font-weight:700;color:var(--navy);margin:4px 0}
+.chip{display:inline-block;padding:2px 9px;border-radius:10px;font-size:11px;font-weight:700;background:var(--lblue);color:var(--navy);margin-inline-end:4px}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:env(safe-area-inset-bottom);z-index:6}
+nav button{background:none;border:0;padding:9px 2px 8px;font-size:12px;color:var(--muted);font-weight:700}
+nav button svg{display:block;margin:0 auto 2px;width:22px;height:22px;fill:currentColor}
+nav button.on{color:var(--coral)}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:20px;font-size:14px;z-index:30;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90%;text-align:center}
+.toast.show{opacity:1}
+.modal{position:fixed;inset:0;background:rgba(20,20,60,.55);z-index:20;display:none;align-items:flex-end;justify-content:center}
+.modal.show{display:flex}
+.sheet{background:#fff;border-radius:18px 18px 0 0;width:100%;max-width:720px;max-height:88vh;overflow:auto;padding:16px 16px calc(16px + env(safe-area-inset-bottom))}
+.sheet.full{height:100%;max-height:100%;border-radius:0}
+dl{display:grid;grid-template-columns:100px 1fr;gap:6px 10px;font-size:14px;margin:0 0 12px}dt{color:var(--muted);font-weight:700}dd{margin:0;white-space:pre-wrap}
+.gate{position:fixed;inset:0;background:var(--navy);color:#fff;z-index:40;display:none;align-items:center;justify-content:center;padding:20px}
+.gate.show{display:flex}.gate .box{background:#fff;color:var(--ink);border-radius:18px;padding:20px;width:100%;max-width:420px}
+.gate h2{margin:0 0 4px;color:var(--navy)}
+#report{display:none}
+@media print{
+  body{background:#fff;padding:0}
+  body>*:not(#reportModal){display:none!important}
+  #reportModal{position:static;background:none;display:block!important}
+  #reportModal .sheet{max-height:none;overflow:visible;padding:0}
+  #reportModal .noprint{display:none!important}
+  #report{display:block}
+}
+#report h2{color:var(--navy);margin:0 0 2px}
+#report table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+#report th{background:var(--navy);color:#fff;padding:6px;text-align:start}
+#report td{padding:6px;border-bottom:1px solid var(--line);vertical-align:top}
+#report tr:nth-child(even) td{background:var(--alt)}
+</style>
+</head>
+<body>
+<header>
+  <svg width="30" height="30" viewBox="-20 -20 40 40" aria-hidden="true"><polygon id="hstar" fill="#F55B41"/></svg>
+  <h1>شغلي<small id="who">My Work Log</small></h1>
+</header>
+
+<main>
+<!-- ============ ADD ============ -->
+<section class="tab on" id="t-add">
+  <div class="hint" id="installHint" style="display:none">مهم: اضغط زر المشاركة في Safari ثم <b>Add to Home Screen</b> وافتح التطبيق من الأيقونة <b>قبل ما تسجل أي حاجة</b>. اللي بيتسجل في Safari بيبقى منفصل عن اللي في الأيقونة، وSafari بيمسحه لو ما فتحتش الصفحة أسبوع.</div>
+  <div class="hint" id="backupHint" style="display:none">مفيش نسخة احتياطية من شغلك من فترة. روح <b>إعدادات</b> واضغط <b>ابعت ملف الإكسل</b>.</div>
+  <div class="card">
+    <h3>احكي اللي عملته</h3>
+    <button class="mic" id="micBtn" aria-label="تسجيل صوتي"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V22h2v-3.08A7 7 0 0 0 19 12z"/></svg></button>
+    <div class="center muted" id="micState">اضغط وتكلم، أو اكتب تحت</div>
+    <div class="row2" style="margin-top:8px"><div><label>لغة الكلام</label><select id="lang"><option value="ar-EG">عربي (مصر)</option><option value="en-US">English</option></select></div><div style="display:flex;align-items:end"><button class="btn ghost block" id="manualBtn">أكتب بالإيد</button></div></div>
+    <textarea id="txt" dir="auto" placeholder="مثال: امبارح صلحت عطل الهيتر في ماكينة M92 خط 3 وكانت واقفة ساعتين، وفرت 5000 جنيه"></textarea>
+    <button class="btn navy block" id="analyzeBtn" style="margin-top:8px">رتّب الكلام في الخانات</button>
+  </div>
+
+  <div class="card" id="formCard" style="display:none">
+    <h3 id="formTitle">راجع وسجّل</h3>
+    <div class="muted" id="parseNote"></div>
+    <div class="row2"><div><label>التاريخ</label><input type="date" id="fDate"></div><div><label>الحالة</label><select id="fStatus"><option value="Done">تم (Done)</option><option value="Ongoing">شغال (Ongoing)</option><option value="Planned">مخطط (Planned)</option></select></div></div>
+    <label>الماكينة</label><select id="fMachine"></select>
+    <label>نوع الشغل</label><select id="fCat"></select>
+    <label>العنوان</label><input id="fTitle" dir="auto" maxlength="120">
+    <label>اللي اتعمل</label><textarea id="fDesc" dir="auto"></textarea>
+    <label>النتيجة / الأثر</label><input id="fImpact" dir="auto" placeholder="مثال: الخط رجع للسرعة العادية">
+    <div class="row2"><div><label>ساعات توقف اتوفرت</label><input type="number" inputmode="decimal" min="0" step="0.5" id="fDt"></div><div><label>التوفير (جنيه)</label><input type="number" inputmode="numeric" min="0" id="fSav"></div></div>
+    <label>دليل (رقم WO / لينك / وصف صورة)</label><input id="fEv" dir="auto">
+    <div class="row2" style="margin-top:14px"><button class="btn main" id="saveBtn">حفظ</button><button class="btn ghost" id="cancelBtn">إلغاء</button></div>
+  </div>
+</section>
+
+<!-- ============ LOG ============ -->
+<section class="tab" id="t-log">
+  <div class="card"><input id="q" placeholder="بحث: ماكينة، عنوان، كلمة..." dir="auto"><div class="row2" style="margin-top:8px"><select id="logMonth"></select><select id="logCat"></select></div></div>
+  <div id="list"></div>
+</section>
+
+<!-- ============ SUMMARY ============ -->
+<section class="tab" id="t-sum">
+  <div class="card"><select id="period"><option value="m">الشهر ده</option><option value="pm">الشهر اللي فات</option><option value="y">السنة دي</option><option value="a">الكل</option></select></div>
+  <div class="kpis" id="kpis"></div>
+  <div class="card"><h3>حسب النوع</h3><div id="byCat"></div></div>
+  <div class="card"><h3>حسب الماكينة</h3><div id="byMach"></div></div>
+  <button class="btn navy block" id="reportBtn">تقرير للطباعة / PDF</button>
+  <a class="btn ghost block" id="viewerBtn" href="viewer.html#mine" style="display:block;text-align:center;text-decoration:none;margin-top:10px">رسومات وبرزنتيشن لشغلي</a>
+</section>
+
+<!-- ============ SETTINGS ============ -->
+<section class="tab" id="t-set">
+  <div class="card"><h3>بياناتي</h3>
+    <label>الاسم</label><input id="sName"><label>الوظيفة</label><select id="sRole"><option>Engineer</option><option>Technician</option><option>Supervisor</option></select>
+    <button class="btn ghost block" id="saveProfile" style="margin-top:10px">حفظ البيانات</button></div>
+  <div class="card"><h3>ملف الإكسل بتاعي</h3>
+    <div class="muted" id="exportInfo"></div>
+    <button class="btn main block" id="shareBtn" style="margin-top:8px">ابعت ملف الإكسل</button>
+    <div class="muted" style="margin-top:6px">بيفتح قايمة المشاركة: اختار واتساب أو تليجرام أو الإيميل أو Files. الملف بيتعمل من اللي على موبايلك وقت الضغط.</div></div>
+  <div class="card"><h3>نسخة احتياطية</h3>
+    <div class="row2"><button class="btn ghost" id="bkBtn">حفظ نسخة</button><button class="btn ghost" id="rsBtn">استرجاع</button></div>
+    <input type="file" id="rsFile" accept=".json,application/json" hidden>
+    <div class="muted" style="margin-top:6px">استخدمها لو غيرت الموبايل أو مسحت بيانات المتصفح.</div></div>
+  <div class="card"><h3>ماكينة جديدة</h3>
+    <label>الاسم</label><input id="mName" dir="auto"><label>المبنى</label><select id="mBld"><option>Acacia</option><option>Palmier</option><option>Utilities</option><option>Site-wide</option></select>
+    <label>أسماء بتتقال شفوي (بينهم فاصلة)</label><input id="mAl" dir="auto" placeholder="مثال: فيته 4, fette 4">
+    <button class="btn ghost block" id="mAdd" style="margin-top:10px">إضافة</button><div class="muted" id="mList" style="margin-top:8px"></div></div>
+  <div class="card"><h3>الخصوصية</h3><div class="muted" style="line-height:1.7">كل اللي بتسجله محفوظ على موبايلك بس. التطبيق مالوش سيرفر ومحدش يقدر يشوف شغلك غير لما إنت تبعت الملف بنفسك. الصوت بيتحول لنص عن طريق خدمة موبايلك (Apple أو Google)، فما تقولش أرقام باتشات أو أسماء منتجات أو أي معلومة سرية. ملف الإكسل بيحتوي كمان على نص كلامك الأصلي، فراجعه قبل ما تبعته.</div></div>
+  <button class="btn red block" id="wipe">مسح كل بياناتي من الموبايل</button>
+</section>
+</main>
+
+<nav id="nav">
+  <button data-t="add" class="on"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V22h2v-3.08A7 7 0 0 0 19 12z"/></svg>تسجيل</button>
+  <button data-t="log"><svg viewBox="0 0 24 24"><path d="M4 5h16v2H4zm0 6h16v2H4zm0 6h10v2H4z"/></svg>سجلي</button>
+  <button data-t="sum"><svg viewBox="0 0 24 24"><path d="M4 20V10h4v10zm6 0V4h4v16zm6 0v-7h4v7z"/></svg>ملخص</button>
+  <button data-t="set"><svg viewBox="0 0 24 24"><path d="M19.4 13a7.9 7.9 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.6 7.6 0 0 0-1.7-1l-.4-2.7h-4l-.4 2.7a7.6 7.6 0 0 0-1.7 1l-2.5-1-2 3.5L4.6 11a7.9 7.9 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.6 7.6 0 0 0 1.7 1l.4 2.7h4l.4-2.7a7.6 7.6 0 0 0 1.7-1l2.5 1 2-3.5zM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5z"/></svg>إعدادات</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+<div class="modal" id="detail"><div class="sheet"><dl id="dBody"></dl><div class="row2"><button class="btn navy" id="dEdit">تعديل</button><button class="btn red" id="dDel">حذف</button></div><button class="btn ghost block" id="dClose" style="margin-top:10px">إغلاق</button></div></div>
+<div class="modal" id="reportModal"><div class="sheet full"><div class="noprint row2" style="margin-bottom:10px"><button class="btn main" id="rPrint">طباعة / حفظ PDF</button><button class="btn ghost" id="rClose">إغلاق</button></div><div id="report"></div></div></div>
+
+<div class="gate" id="gate"><div class="box">
+  <h2>أهلاً بيك</h2><div class="muted" style="margin-bottom:8px">سجّل شغلك بصوتك. كل حاجة محفوظة على موبايلك إنت بس.</div>
+  <label>اسمك</label><input id="gName" dir="auto" placeholder="الاسم"><label>الوظيفة</label>
+  <select id="gRole"><option>Engineer</option><option selected>Technician</option><option>Supervisor</option></select>
+  <button class="btn main block" id="gGo" style="margin-top:14px">ابدأ</button>
+</div></div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const K="wl.v1";
+
+/* ---------------- reference data ---------------- */
+const CATS=[
+ ["Achievement","إنجاز",["انجاز","حققت","خلصت","اتمام","achievement","closed","اقفلت","قفلت"]],
+ ["Beyond Scope","شغل زيادة عن مهامي",["زياده عن","خارج شغلي","مش من شغلي","مش من مهامي","بعيد عن شغلي","ساعدت","beyond","extra","اضافي","تطوعت"]],
+ ["Cost Saving","توفير فلوس",["وفر","توفير","saving","saved","بدل ما نشتري","بدل شراء","بدل ما اشتري","اصلاح محلي","محلي","ارخص","اقل تكلفه"]],
+ ["Kaizen / Improvement","تحسين",["تحسين","حسنت","كايزن","طورت","تطوير","kaizen","improve","سهلت","قللت","خفضت","optimiz"]],
+ ["Breakdown Fixed","إصلاح عطل",["عطل","صلحت","اصلحت","خربان","واقفه","وقفت","وقف","breakdown","fault","alarm","انذار","fixed","repair","تغيير","غيرت","استبدلت","مشكله"]],
+ ["Project / Installation","مشروع / تركيب",["تركيب","ركبت","مشروع","installation","install","project","نقل ماكينه","commissioning"]],
+ ["Safety","سلامة",["سلامه","امان","safety","حمايه","guard","interlock","loto","lockout","خطر","اصابه"]],
+ ["GMP / Quality","جودة / GMP",["جوده","gmp","معايره","calibration","تاهيل","qualification","توثيق","deviation","انحراف","validation","sop","audit","تدقيق"]],
+ ["Energy & Utilities","طاقة ومرافق",["كهرباء","طاقه","تسريب هواء","تسريب","air leak","energy","مياه","استهلاك","ترشيد","هواء مضغوط","بخار"]],
+ ["Training & Knowledge","تدريب ومعرفة",["دربت","تدريب","شرحت","opl","training","علمت","محاضره","كتبت دليل"]]
+];
+const BUILTIN=[
+ ["GEA PMA 800 / FBD 600 (Gran L1)","Acacia","Granulation L1 (R06)","gea 1,gea1,pma 800,pma800,fbd 600,تحبيب 1,خط التحبيب 1,gran l1,granulation 1,جي ايه 1"],
+ ["GEA Pharmaconnect 120 / FBD 150 (Gran L2)","Acacia","Granulation L2 (R21)","gea 2,gea2,pharmaconnect,فارماكونكت,fbd 150,تحبيب 2,خط التحبيب 2,gran l2,granulation 2,جي ايه 2"],
+ ["Bohle Bin Blender PM 2000","Acacia","Blending (R15)","bohle,بوهل,blender,بلندر,خلاط,bin blender,pm 2000"],
+ ["Fette 1 P1200","Acacia","Compression (R16)","fette 1,fette1,p1200,p 1200,فيته 1,فيت 1,فيتي 1"],
+ ["Fette 2 1200i","Acacia","Compression (R19)","fette 2,fette2,1200i,فيته 2,فيت 2,فيتي 2"],
+ ["Fette 3 FE55","Acacia","Compression (R20)","fette 3,fette3,fe55,fe 55,فيته 3,فيت 3,فيته 55,فيت 55,فيتي 3"],
+ ["Sviac PR 39","Acacia","Compression (R18)","sviac,pr39,pr 39,سفياك,سفيك"],
+ ["MG2 Planeta 100","Acacia","Capsule filling (R17)","mg2,planeta,بلانيتا,ام جي 2,كبسولات,capsule"],
+ ["Manesty Accelacota 350","Acacia","Coating (R22)","manesty,accelacota,مانستي,اكسيلاكوتا,كوتر 22"],
+ ["GS HT/F 150","Acacia","Coating (R23)","gs,ht/f,ht f,جي اس,كوتر 23"],
+ ["IMA Effecta 200","Acacia","Coating (R24)","effecta,افكتا,ايفكتا,كوتر 24"],
+ ["PPS Pharmacount 120 (L1)","Palmier","Line 1 (R117)","pharmacount,pps,فارماكاونت,فارماكونت,عداد,counting"],
+ ["IMA Flexa cartoner (L1)","Palmier","Line 1 (R117)","flexa,فلكسا,فليكسا"],
+ ["CAM MX blister (L2)","Palmier","Line 2 (R120)","cam mx,mx blister,mx"],
+ ["CAM PMX cartoner (L2)","Palmier","Line 2 (R120)","pmx,بي ام اكس"],
+ ["CAM M92 blister (L3)","Palmier","Line 3 (R123)","m92 l3,m92 line 3,m92 3,m92 خط 3,ام 92 خط 3,ام92 خط 3,بلستر خط 3"],
+ ["CAM PMM cartoner (L3)","Palmier","Line 3 (R123)","pmm,بي ام ام"],
+ ["Korber blister (L4)","Palmier","Line 4 (R126)","korber blister,كوربر بلستر,بلستر كوربر,korber l4,blister l4,korber"],
+ ["Korber cartoner (L4)","Palmier","Line 4 (R126)","korber cartoner,كوربر كرتونه,كرتونه كوربر,cartoner l4"],
+ ["CAM M92 blister (L5)","Palmier","Line 5 (R129)","m92 l5,m92 line 5,m92 5,m92 خط 5,ام 92 خط 5,ام92 خط 5,بلستر خط 5"],
+ ["CAM HV cartoner (L5)","Palmier","Line 5 (R129)","cam hv,hv,hv cartoner,اتش في"],
+ ["HVAC / AHUs","Utilities","Utilities","hvac,ahu,ahus,تكييف,التكييف,مكيف"],
+ ["Purified Water","Utilities","Utilities","purified water,pw,مياه نقيه,المياه النقيه"],
+ ["Compressed Air","Utilities","Utilities","compressor,compressed air,كومبريسور,كومبريسر,كمبروسر,هواء مضغوط"],
+ ["Steam Boiler","Utilities","Utilities","boiler,بويلر,steam,بخار"],
+ ["Electrical Distribution","Utilities","Utilities","لوحه كهرباء,لوحه,mdb,panel,توزيع كهرباء,ترانس,transformer,electrical"],
+ ["BMS / EMS","Utilities","Utilities","bms,ems"],
+ ["General / No machine","Site-wide","General","عام,general"]
+].map(a=>({name:a[0],building:a[1],area:a[2],aliases:a[3].split(",")}));
+const HEAD=["Entry ID","Date","Member","Role","Building","Area / Line","Machine","Category","Title","What was done","Impact / Result","Downtime Saved (h)","Savings (EGP)","Evidence (WO / photo / link)","Status","Verified","Verified By","Source","Original Text (voice transcript)","Logged At"];
+
+/* ---------------- storage ---------------- */
+let S=load();
+function load(){try{const r=JSON.parse(localStorage.getItem(K));if(r&&Array.isArray(r.entries))return Object.assign({profile:null,machines:[],lastExport:null},r)}catch(e){}return{profile:null,entries:[],machines:[],lastExport:null}}
+function save(){try{localStorage.setItem(K,JSON.stringify(S));return true}catch(e){toast("مش قادر أحفظ على الموبايل. اعمل نسخة احتياطية");return false}}
+const machines=()=>BUILTIN.concat(S.machines||[]);
+const today=()=>iso(new Date());
+function iso(d){const p=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())}
+function fromIso(s){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||"");return m?new Date(+m[1],+m[2]-1,+m[3]):null}
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove("show"),2600)}
+
+/* ---------------- parsing (works offline, no AI) ---------------- */
+function norm(s){return String(s||"").toLowerCase().replace(/[\u0660-\u0669]/g,d=>d.charCodeAt(0)-0x660).replace(/[\u06F0-\u06F9]/g,d=>d.charCodeAt(0)-0x6F0).replace(/[\u064B-\u065F\u0670\u0640]/g,"").replace(/[أإآ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/[،؛؟]/g," , ").replace(/\s+/g," ").trim()}
+function hasTerm(text,term){
+  if(!term)return false;
+  if(/^[a-z0-9 \/\.\-]+$/.test(term)){const re=new RegExp("(^|[^a-z0-9])"+term.replace(/[.*+?^${}()|[\]\\\/]/g,"\\$&").replace(/ /g,"\\s*")+"($|[^a-z0-9])");return re.test(text)}
+  if(term.length<=3)return new RegExp("(^|\\s)"+term+"($|\\s)").test(text);
+  return text.includes(term);
+}
+function findMachine(nt){
+  let best=null,bs=0,tie=false;
+  for(const m of machines()){let sc=0;for(const a of m.aliases){const t=norm(a);if(t&&hasTerm(nt,t))sc=Math.max(sc,t.length)}
+    if(sc>bs){bs=sc;best=m;tie=false}else if(sc&&sc===bs)tie=true}
+  return bs&&!tie?best:null;
+}
+function findCategory(nt){
+  let best="Achievement",bs=0;
+  for(const [v,,kw] of CATS){let sc=0;for(const k of kw){if(nt.includes(norm(k)))sc+=1}
+    if(sc>bs){bs=sc;best=v}}
+  return best;
+}
+function mult(w){return w&&/^(الف|الاف|k)$/.test(w)?1000:1}
+function parseText(raw){
+  const nt=norm(raw).replace(/(\d)[,\u066C](?=\d{3}(?!\d))/g,"$1"),out={date:today(),machine:null,category:findCategory(nt),title:"",desc:raw.trim(),impact:"",dt:"",sav:"",evidence:"",status:"Done"};
+  const m=findMachine(nt);if(m)out.machine=m.name;
+  // date
+  if(/اول امبارح|اول مبارح|day before yesterday/.test(nt))out.date=iso(new Date(Date.now()-2*864e5));
+  else if(/امبارح|مبارح|yesterday/.test(nt))out.date=iso(new Date(Date.now()-864e5));
+  const dm=/(?<![\d.])(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?(?![\d])|(?<![\d.])(\d{1,2})-(\d{1,2})-(\d{2,4})(?![\d])/.exec(nt);
+  if(dm){let d=+(dm[1]||dm[4]),mo=+(dm[2]||dm[5]),y=(dm[3]||dm[6])?+(dm[3]||dm[6]):new Date().getFullYear();if(y<100)y+=2000;if(mo>=1&&mo<=12&&d>=1&&d<=31){const dd=new Date(y,mo-1,d);if(dd<=new Date())out.date=iso(dd)}}
+  // savings
+  let sv=/(\d+(?:\.\d+)?)\s*(الف|الاف|k)?\s*(?:جنيه|جنيها|جنيهات|egp|le(?![a-z])|l\.e|pounds?)/.exec(nt)||/(?:وفر\w*|saved|saving|توفير)\s*(?:حوالي|تقريبا|ب|بحوالي)?\s*(\d+(?:\.\d+)?)\s*(الف|الاف|k)?/.exec(nt);
+  if(sv)out.sav=Math.round(parseFloat(sv[1])*mult(sv[2]));
+  // downtime hours (only near stop words)
+  const stopRe=/(توقف|وقف|واقف|downtime|stopp?ed|stop|وقت)/;
+  const hrRe=/(\d+(?:\.\d+)?)\s*(?:ساعات|ساعه|hours|hour|hrs|hr|h)(?![a-z؀-ۿ])|(ساعتين)|(نص ساعه|نصف ساعه)|(ساعه)(?![a-z؀-ۿ])/g;let h;
+  while((h=hrRe.exec(nt))){const around=nt.slice(Math.max(0,h.index-30),h.index+h[0].length+30);if(!stopRe.test(around))continue;
+    out.dt=h[1]?parseFloat(h[1]):h[2]?2:h[3]?0.5:1;break}
+  // evidence
+  const wo=/wo\s*[-#:]?\s*(\d{4,})/.exec(nt);if(wo)out.evidence="WO-"+wo[1];
+  // status
+  if(/(لسه|لسا|شغال عليه|جاري|ongoing|in progress|مستمر)/.test(nt))out.status="Ongoing";
+  else if(/(هعمل|هنعمل|هركب|مخطط|planned|هصلح|هنركب)/.test(nt))out.status="Planned";
+  // title
+  const first=raw.trim().split(/[.!؟?\n]/)[0].trim().split(/\s+/).slice(0,10).join(" ");
+  out.title=first;
+  return out;
+}
+
+/* ---------------- add / edit form ---------------- */
+let editId=null,usedMic=false,draftText="";
+function fillSelects(){
+  const mSel=$("#fMachine"),cur=mSel.value;
+  mSel.innerHTML='<option value="">اختار الماكينة</option>'+machines().map(m=>`<option>${esc(m.name)}</option>`).join("");if(cur)mSel.value=cur;
+  $("#fCat").innerHTML=CATS.map(c=>`<option value="${c[0]}">${c[1]} (${c[0]})</option>`).join("");
+  $("#logCat").innerHTML='<option value="">كل الأنواع</option>'+CATS.map(c=>`<option value="${c[0]}">${c[1]}</option>`).join("");
+}
+function showForm(o,note,title){
+  $("#formCard").style.display="block";$("#formTitle").textContent=title||"راجع وسجّل";
+  $("#fDate").value=o.date||today();$("#fStatus").value=o.status||"Done";
+  $("#fMachine").value=o.machine||"";$("#fCat").value=o.category||"Achievement";
+  $("#fTitle").value=o.title||"";$("#fDesc").value=o.desc||"";$("#fImpact").value=o.impact||"";
+  $("#fDt").value=o.dt===""||o.dt==null?"":o.dt;$("#fSav").value=o.sav===""||o.sav==null?"":o.sav;$("#fEv").value=o.evidence||"";
+  $("#parseNote").textContent=note||"";
+  $("#formCard").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function analyze(){
+  const t=$("#txt").value.trim();if(!t){toast("اكتب أو سجّل كلام الأول");return}
+  editId=null;draftText=t;const o=parseText(t);
+  const miss=[];if(!o.machine)miss.push("الماكينة");
+  showForm(o,"الخانات اتعبت من كلامك. راجعها وصحح اللي غلط"+(miss.length?". ما لقيتش: "+miss.join("، "):""),"راجع وسجّل");
+}
+function clearDraft(){editId=null;usedMic=false;draftText="";$("#txt").value="";$("#formCard").style.display="none"}
+function saveEntry(){
+  const date=$("#fDate").value,machine=$("#fMachine").value,cat=$("#fCat").value;let title=$("#fTitle").value.trim();const desc=$("#fDesc").value.trim();
+  if(!fromIso(date))return toast("اكتب تاريخ صحيح");
+  if(!machine)return toast("اختار الماكينة");
+  if(!title&&desc)title=desc.split(/\s+/).slice(0,10).join(" ");
+  if(!title)return toast("اكتب عنوان");
+  const mm=machines().find(m=>m.name===machine)||{building:"",area:""};
+  const num=v=>{v=String(v).trim();return v===""||isNaN(+v)||+v<0?"":+v};
+  const rec={date,machine,building:mm.building,area:mm.area,category:cat,title,desc,impact:$("#fImpact").value.trim(),dt:num($("#fDt").value),sav:num($("#fSav").value),evidence:$("#fEv").value.trim(),status:$("#fStatus").value};
+  if(editId){const i=S.entries.findIndex(e=>e.id===editId);if(i>=0)S.entries[i]=Object.assign(S.entries[i],rec)}
+  else{rec.id=newId(date);rec.source=draftText?(usedMic?"Voice note":"Text message"):"Manual";rec.text=draftText;rec.loggedAt=new Date().toISOString();S.entries.push(rec)}
+  if(editId&&!S.entries.some(e=>e.id===editId)){toast("الشغلانة دي اتمسحت");return}
+  if(save()){toast(editId?"اتعدّل":"اتسجّل ✓");if(navigator.vibrate)navigator.vibrate(40);clearDraft();renderAll()}
+}
+function newId(date){const y=date.slice(0,4);S.seq=S.seq||{};let n=S.seq[y]||0;for(const e of S.entries){const m=/^ACH-(\d{4})-(\d+)$/.exec(e.id||"");if(m&&m[1]===y)n=Math.max(n,+m[2])}S.seq[y]=n+1;return "ACH-"+y+"-"+String(n+1).padStart(4,"0")}
+
+/* ---------------- voice ---------------- */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition,IOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+let rec=null,listening=false,baseTxt="";
+function micUI(on){listening=on;$("#micBtn").classList.toggle("rec",on);$("#micState").textContent=on?"بسمعك... اضغط تاني لما تخلص":"اضغط وتكلم، أو اكتب تحت"}
+$("#micBtn").onclick=()=>{
+  if(!SR){toast("المتصفح مش بيدعم الصوت. اكتب، أو استخدم ميكروفون الكيبورد");$("#txt").focus();return}
+  if(listening){try{rec.stop()}catch(e){}return}
+  try{
+    const r=new SR();rec=r;r.lang=$("#lang").value;r.interimResults=true;r.continuous=false;
+    baseTxt=$("#txt").value?$("#txt").value.trim()+" ":"";let got=false,err=false;
+    r.onresult=e=>{if(rec!==r)return;got=true;usedMic=true;let t="";for(let i=0;i<e.results.length;i++)t+=e.results[i][0].transcript;$("#txt").value=baseTxt+t};
+    r.onerror=e=>{if(rec!==r)return;err=true;micUI(false);toast(e.error==="not-allowed"||e.error==="service-not-allowed"?"اسمح للميكروفون وفعّل Dictation من إعدادات الموبايل":e.error==="no-speech"?"ما سمعتش حاجة، جرب تاني":"الصوت وقف: "+(e.error||""))};
+    r.onend=()=>{if(rec!==r)return;micUI(false);if(got&&!err&&$("#txt").value.trim())analyze()};
+    r.start();micUI(true);
+  }catch(e){micUI(false);toast("مقدرتش أشغل الميكروفون")}
+};
+
+/* ---------------- views ---------------- */
+function switchTab(t){$$(".tab").forEach(s=>s.classList.toggle("on",s.id==="t-"+t));$$("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));window.scrollTo(0,0);if(t==="sum")renderSummary();if(t==="log")renderLog();if(t==="set")renderSettings()}
+$$("#nav button").forEach(b=>b.onclick=()=>switchTab(b.dataset.t));
+const catAr=v=>(CATS.find(c=>c[0]===v)||[,v])[1];
+const fmt=n=>Math.round(+n||0).toLocaleString("en-US");
+function monthsOf(){const s=new Set(S.entries.map(e=>e.date.slice(0,7)));return [...s].sort().reverse()}
+function renderLog(){
+  const cur=$("#logMonth").value;
+  $("#logMonth").innerHTML='<option value="">كل الشهور</option>'+monthsOf().map(m=>`<option>${m}</option>`).join("");$("#logMonth").value=cur;
+  const q=norm($("#q").value),mo=$("#logMonth").value,ct=$("#logCat").value;
+  const L=S.entries.filter(e=>(!mo||e.date.startsWith(mo))&&(!ct||e.category===ct)&&(!q||norm([e.title,e.desc,e.machine,e.impact,e.evidence].join(" ")).includes(q))).sort((a,b)=>b.date.localeCompare(a.date)||b.id.localeCompare(a.id));
+  $("#list").innerHTML=L.map(e=>`<div class="item" data-id="${esc(e.id)}"><div class="top"><span>${esc(e.date)}</span><span>${esc(e.id)}</span></div><div class="ti" dir="auto">${esc(e.title)}</div><div><span class="chip">${esc(catAr(e.category))}</span><span class="chip">${esc(e.machine)}</span>${e.sav?`<span class="chip" style="background:#fde1db">${fmt(e.sav)} ج</span>`:""}${e.dt?`<span class="chip" style="background:#dff0c8">${e.dt} س</span>`:""}</div></div>`).join("")||'<div class="card center muted">لسه مفيش شغل مسجّل هنا</div>';
+  $$("#list .item").forEach(el=>el.onclick=()=>openDetail(el.dataset.id));
+}
+let openId=null;
+function openDetail(id){const e=S.entries.find(x=>x.id===id);if(!e)return;openId=id;
+  const F=[["التاريخ",e.date],["الماكينة",e.machine],["النوع",catAr(e.category)],["العنوان",e.title],["اللي اتعمل",e.desc],["النتيجة",e.impact],["توقف اتوفر",e.dt?e.dt+" ساعة":""],["التوفير",e.sav?fmt(e.sav)+" جنيه":""],["دليل",e.evidence],["الحالة",e.status],["المصدر",e.source],["الكلام الأصلي",e.text]];
+  $("#dBody").innerHTML=F.filter(f=>f[1]).map(f=>`<dt>${f[0]}</dt><dd dir="auto">${esc(f[1])}</dd>`).join("");$("#detail").classList.add("show")}
+$("#dClose").onclick=()=>$("#detail").classList.remove("show");
+$("#dEdit").onclick=()=>{const e=S.entries.find(x=>x.id===openId);if(!e)return;$("#detail").classList.remove("show");editId=e.id;draftText=e.text||"";switchTab("add");showForm(e,"","تعديل "+e.id)};
+$("#dDel").onclick=()=>{if(!confirm("تمسح الشغلانة دي؟"))return;S.entries=S.entries.filter(x=>x.id!==openId);save();$("#detail").classList.remove("show");renderAll();toast("اتمسحت")};
+["#q","#logMonth","#logCat"].forEach(s=>$(s).oninput=renderLog);
+
+function periodEntries(){
+  const p=$("#period").value,now=new Date(),ym=iso(now).slice(0,7),pm=iso(new Date(now.getFullYear(),now.getMonth()-1,1)).slice(0,7);
+  return S.entries.filter(e=>p==="a"||(p==="m"&&e.date.startsWith(ym))||(p==="pm"&&e.date.startsWith(pm))||(p==="y"&&e.date.startsWith(String(now.getFullYear()))));
+}
+function bars(el,rows,color){const max=Math.max(1,...rows.map(r=>r[1]));el.innerHTML=rows.map(r=>`<div class="bar"><div class="n" title="${esc(r[0])}">${esc(r[0])}</div><div class="t"><i style="width:${r[1]/max*100}%;background:${color}"></i></div><div class="v">${r[1]}</div></div>`).join("")||'<div class="muted">مفيش بيانات</div>'}
+function stats(E){return{n:E.length,beyond:E.filter(e=>e.category==="Beyond Scope").length,sav:E.reduce((a,e)=>a+(+e.sav||0),0),dt:E.reduce((a,e)=>a+(+e.dt||0),0)}}
+function renderSummary(){
+  const E=periodEntries(),s=stats(E);
+  $("#kpis").innerHTML=[["شغلانات",s.n,"#242269"],["زيادة عن مهامي",s.beyond,"#9B7DCD"],["توفير (جنيه)",fmt(s.sav),"#F55B41"],["ساعات توقف اتوفرت",s.dt%1?s.dt.toFixed(1):s.dt,"#323C8E"]].map(k=>`<div class="kpi" style="background:${k[2]}"><b>${k[1]}</b><span>${k[0]}</span></div>`).join("");
+  const grp=(key,lab)=>{const m=new Map();for(const e of E){const k=lab?lab(e[key]):e[key];m.set(k,(m.get(k)||0)+1)}return [...m].sort((a,b)=>b[1]-a[1]).slice(0,10)};
+  bars($("#byCat"),grp("category",catAr),"#F55B41");bars($("#byMach"),grp("machine"),"#323C8E");
+}
+$("#period").onchange=renderSummary;
+
+function renderSettings(){
+  $("#sName").value=S.profile?S.profile.name:"";$("#sRole").value=S.profile?S.profile.role:"Technician";
+  $("#exportInfo").textContent=`${S.entries.length} شغلانة. آخر إرسال: ${S.lastExport?S.lastExport.slice(0,10):"لسه ما بعتش"}`;
+  $("#mList").textContent=(S.machines||[]).length?"ماكينات إضافتها: "+S.machines.map(m=>m.name).join("، "):"";
+}
+function renderAll(){$("#who").textContent=S.profile?S.profile.name:"My Work Log";fillSelects();renderLog();renderSummary();renderSettings();hints()}
+function hints(){
+  const standalone=window.matchMedia("(display-mode: standalone)").matches||navigator.standalone;
+  $("#installHint").style.display=(IOS&&!standalone)?"block":"none";
+  const old=!S.lastExport||(Date.now()-Date.parse(S.lastExport))>14*864e5;
+  $("#backupHint").style.display=(S.entries.length>=5&&old)?"block":"none";
+}
+
+/* ---------------- Excel export (no library) ---------------- */
+const CRCT=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+function crc32(u){let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=CRCT[(c^u[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
+function makeZip(files){
+  const enc=new TextEncoder(),parts=[],cen=[];let off=0;
+  for(const f of files){
+    const nm=enc.encode(f.name),d=enc.encode(f.data),crc=crc32(d);
+    const lh=new DataView(new ArrayBuffer(30));lh.setUint32(0,0x04034b50,true);lh.setUint16(4,20,true);lh.setUint16(6,0x0800,true);lh.setUint16(12,0x21,true);lh.setUint32(14,crc,true);lh.setUint32(18,d.length,true);lh.setUint32(22,d.length,true);lh.setUint16(26,nm.length,true);
+    parts.push(new Uint8Array(lh.buffer),nm,d);
+    const ch=new DataView(new ArrayBuffer(46));ch.setUint32(0,0x02014b50,true);ch.setUint16(4,20,true);ch.setUint16(6,20,true);ch.setUint16(8,0x0800,true);ch.setUint16(14,0x21,true);ch.setUint32(16,crc,true);ch.setUint32(20,d.length,true);ch.setUint32(24,d.length,true);ch.setUint16(28,nm.length,true);ch.setUint32(42,off,true);
+    cen.push(new Uint8Array(ch.buffer),nm);off+=30+nm.length+d.length;
+  }
+  let cs=0;for(const c of cen)cs+=c.length;
+  const e=new DataView(new ArrayBuffer(22));e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,cs,true);e.setUint32(16,off,true);
+  return new Blob([...parts,...cen,new Uint8Array(e.buffer)],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+}
+const colL=i=>{let s="";i++;while(i>0){const m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26)}return s};
+const xesc=s=>String(s).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const serial=d=>Math.round(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5)+25569;
+function cell(r,c,v,s){const ref=colL(c)+r;if(v===""||v==null)return s?`<c r="${ref}" s="${s}"/>`:"";
+  if(typeof v==="number")return `<c r="${ref}"${s?` s="${s}"`:""}><v>${v}</v></c>`;
+  return `<c r="${ref}" t="inlineStr"${s?` s="${s}"`:""}><is><t xml:space="preserve">${xesc(v)}</t></is></c>`}
+function buildXlsx(){
+  const p=S.profile||{name:"",role:""},rows=[];
+  const E=[...S.entries].sort((a,b)=>a.date.localeCompare(b.date)||a.id.localeCompare(b.id));
+  let r1="",r2="",r3="";for(let c=0;c<20;c++){r1+=cell(1,c,"",5);r2+=cell(2,c,c===0?"Team Achievement Log | "+p.name:"",4);r3+=cell(3,c,c===0?"Personal file exported from the phone app. Same columns as the team Log.":"",6)}
+  rows.push(`<row r="1" ht="5" customHeight="1">${r1}</row>`,`<row r="2" ht="26" customHeight="1">${r2}</row>`,`<row r="3" ht="18" customHeight="1">${r3}</row>`);
+  rows.push(`<row r="4" ht="32" customHeight="1">${HEAD.map((h,i)=>cell(4,i,h,1)).join("")}</row>`);
+  E.forEach((e,i)=>{const r=5+i,d=fromIso(e.date),lg=e.loggedAt?new Date(e.loggedAt):null;
+    const lgSer=lg&&!isNaN(lg)?Math.round(((lg.getTime()-lg.getTimezoneOffset()*6e4)/864e5+25569)*1e5)/1e5:"";
+    const vals=[e.id,d?serial(d):"",p.name,p.role,e.building,e.area,e.machine,e.category,e.title,e.desc,e.impact,e.dt===""?"":+e.dt,e.sav===""?"":+e.sav,e.evidence,e.status,"Pending","",e.source,e.text,lgSer];
+    const st=[0,2,0,0,0,0,0,0,7,7,7,0,0,7,0,0,0,0,7,3];
+    rows.push(`<row r="${r}">${vals.map((v,c)=>cell(r,c,v,st[c])).join("")}</row>`)});
+  const widths=[14,13,18,11,11,16,28,20,30,46,32,11,12,22,10,10,15,12,42,17];
+  const sheet=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0" showGridLines="0"><pane xSplit="2" ySplit="4" topLeftCell="C5" activePane="bottomRight" state="frozen"/></sheetView></sheetViews><cols>${widths.map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join("")}</cols><sheetData>${rows.join("")}</sheetData></worksheet>`;
+  const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="2"><numFmt numFmtId="164" formatCode="dd\\-mmm\\-yyyy"/><numFmt numFmtId="165" formatCode="dd\\-mmm\\-yyyy\\ hh:mm"/></numFmts><fonts count="4"><font><sz val="10"/><name val="Century Gothic"/></font><font><b/><sz val="10"/><color rgb="FFFFFFFF"/><name val="Century Gothic"/></font><font><b/><sz val="14"/><color rgb="FFFFFFFF"/><name val="Century Gothic"/></font><font><i/><sz val="9"/><color rgb="FF242269"/><name val="Century Gothic"/></font></fonts><fills count="5"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF242269"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFF55B41"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFD3DEF2"/></patternFill></fill></fills><borders count="1"><border/></borders><cellStyleXfs count="1"><xf/></cellStyleXfs><cellXfs count="8"><xf fontId="0"/><xf fontId="1" fillId="2" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf><xf fontId="0" numFmtId="164" applyNumberFormat="1" applyAlignment="1"><alignment horizontal="left" vertical="top"/></xf><xf fontId="0" numFmtId="165" applyNumberFormat="1"/><xf fontId="2" fillId="2" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center"/></xf><xf fontId="0" fillId="3" applyFill="1"/><xf fontId="3" fillId="4" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center"/></xf><xf fontId="0" applyAlignment="1"><alignment vertical="top" wrapText="1"/></xf></cellXfs></styleSheet>`;
+  return makeZip([
+    {name:"[Content_Types].xml",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`},
+    {name:"_rels/.rels",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`},
+    {name:"xl/workbook.xml",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Log" sheetId="1" r:id="rId1"/></sheets></workbook>`},
+    {name:"xl/_rels/workbook.xml.rels",data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`},
+    {name:"xl/styles.xml",data:styles},
+    {name:"xl/worksheets/sheet1.xml",data:sheet}
+  ]);
+}
+const safeName=s=>String(s||"me").replace(/[\\\/:*?"<>|\s]+/g,"_").slice(0,30);
+async function shareBlob(blob,fname,title){
+  const f=new File([blob],fname,{type:blob.type});
+  try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title});return true}}catch(e){if(e&&e.name==="AbortError")return false}
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=fname;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000);return true;
+}
+$("#shareBtn").onclick=async()=>{
+  if(!S.entries.length)return toast("لسه مفيش شغل تبعته");
+  const ok=await shareBlob(buildXlsx(),"WorkLog_"+safeName(S.profile&&S.profile.name)+"_"+today()+".xlsx","شغلي");
+  if(ok){S.lastExport=new Date().toISOString();save();renderSettings();hints()}
+};
+$("#bkBtn").onclick=async()=>{const b=new Blob([JSON.stringify(S)],{type:"application/json"});if(await shareBlob(b,"WorkLog_backup_"+today()+".json","نسخة احتياطية")){S.lastExport=new Date().toISOString();save();renderSettings();hints()}};
+$("#rsBtn").onclick=()=>$("#rsFile").click();
+$("#rsFile").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;
+  try{const r=JSON.parse(await f.text());if(!r||!Array.isArray(r.entries))throw 0;
+    const str=v=>v==null?"":String(v),nm=v=>{v=parseFloat(v);return isFinite(v)&&v>=0?v:""};
+    const have=new Map(S.entries.map(x=>[x.id,x]));let add=0;
+    for(const x0 of r.entries){if(!x0||typeof x0!=="object"||!/^\d{4}-\d{2}-\d{2}$/.test(str(x0.date))||!fromIso(x0.date))continue;
+      const x={id:str(x0.id),date:x0.date,machine:str(x0.machine),building:str(x0.building),area:str(x0.area),category:str(x0.category)||"Achievement",title:str(x0.title),desc:str(x0.desc),impact:str(x0.impact),dt:nm(x0.dt),sav:nm(x0.sav),evidence:str(x0.evidence),status:["Done","Ongoing","Planned"].includes(x0.status)?x0.status:"Done",source:str(x0.source)||"Manual",text:str(x0.text),loggedAt:str(x0.loggedAt)};
+      if(!x.id||!x.title)continue;
+      const old=have.get(x.id);if(old){if(old.title===x.title&&old.date===x.date)continue;x.id=newId(x.date)}
+      S.entries.push(x);have.set(x.id,x);add++}
+    if(!S.profile&&r.profile)S.profile=r.profile;
+    if(Array.isArray(r.machines))for(const m of r.machines)if(!(S.machines||[]).some(y=>y.name===m.name))(S.machines=S.machines||[]).push(m);
+    save();renderAll();toast("اتضاف "+add+" شغلانة")}catch(err){toast("الملف ده مش نسخة احتياطية صحيحة")}};
+$("#saveProfile").onclick=()=>{const n=$("#sName").value.trim();if(!n)return toast("اكتب الاسم");S.profile={name:n,role:$("#sRole").value};save();renderAll();toast("اتحفظ")};
+$("#mAdd").onclick=()=>{const n=$("#mName").value.trim();if(!n)return toast("اكتب اسم الماكينة");
+  S.machines=S.machines||[];S.machines.push({name:n,building:$("#mBld").value,area:"",aliases:$("#mAl").value.split(/[,،]/).map(x=>x.trim()).filter(Boolean).concat([n])});
+  save();$("#mName").value="";$("#mAl").value="";renderAll();toast("اتضافت")};
+$("#wipe").onclick=()=>{if(!confirm("هتمسح كل شغلك من الموبايل. بعت الملف قبل كده؟"))return;if(!confirm("متأكد؟ مفيش رجعة."))return;try{localStorage.removeItem(K)}catch(e){}S={profile:S.profile,entries:[],machines:[],lastExport:null};save();renderAll();toast("اتمسح")};
+
+/* ---------------- report ---------------- */
+$("#reportBtn").onclick=()=>{
+  const E=periodEntries().sort((a,b)=>a.date.localeCompare(b.date)),s=stats(E),p=S.profile||{name:"",role:""},lab=$("#period").selectedOptions[0].textContent;
+  $("#report").innerHTML=`<div dir="ltr" style="font-family:'Century Gothic',sans-serif"><div style="height:6px;background:#F55B41"></div><div style="background:#242269;color:#fff;padding:14px 16px"><h2 style="color:#fff;margin:0">Work report | ${esc(p.name)}</h2><div style="font-size:12px;opacity:.8">${esc(p.role)} · ${esc(lab)} · ${today()} · Servier Cairo site</div></div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0">${[["Entries",s.n,"#242269"],["Beyond scope",s.beyond,"#9B7DCD"],["Savings (EGP)",fmt(s.sav),"#F55B41"],["Downtime saved (h)",s.dt,"#323C8E"]].map(k=>`<div style="background:${k[2]};color:#fff;border-radius:8px;padding:8px 10px"><b style="font-size:20px">${k[1]}</b><div style="font-size:11px">${k[0]}</div></div>`).join("")}</div>
+  <table><tr><th>Date</th><th>Machine</th><th>Category</th><th>Title</th><th>Result</th><th>EGP</th><th>Hours</th><th>Evidence</th></tr>${E.map(e=>`<tr><td>${esc(e.date)}</td><td>${esc(e.machine)}</td><td>${esc(e.category)}</td><td dir="auto">${esc(e.title)}</td><td dir="auto">${esc(e.impact)}</td><td>${e.sav?fmt(e.sav):""}</td><td>${e.dt||""}</td><td>${esc(e.evidence)}</td></tr>`).join("")}</table></div>`;
+  $("#reportModal").classList.add("show");
+};
+$("#rClose").onclick=()=>$("#reportModal").classList.remove("show");
+$("#rPrint").onclick=()=>window.print();
+
+/* ---------------- start ---------------- */
+$("#analyzeBtn").onclick=analyze;
+$("#manualBtn").onclick=()=>{editId=null;usedMic=false;draftText="";showForm({date:today()},"","تسجيل يدوي")};
+$("#saveBtn").onclick=saveEntry;$("#cancelBtn").onclick=clearDraft;
+$("#gGo").onclick=()=>{const n=$("#gName").value.trim();if(!n)return toast("اكتب اسمك");S.profile={name:n,role:$("#gRole").value};save();$("#gate").classList.remove("show");renderAll();try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}};
+(function(){let p=[];for(let i=0;i<16;i++){const a=Math.PI*i/8-Math.PI/2,r=i%2?7.6:18;p.push((r*Math.cos(a)).toFixed(2)+","+(r*Math.sin(a)).toFixed(2))}$("#hstar").setAttribute("points",p.join(" "))})();
+renderAll();
+if(!S.profile)$("#gate").classList.add("show");
+if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>

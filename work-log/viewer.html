@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team Achievements</title>
+<style>
+:root{
+  --navy:#242269;--coral:#F55B41;--green:#91C361;--blue:#323C8E;--purple:#9B7DCD;--gold:#FDC300;
+  --lblue:#D3DEF2;--cyan:#47BFD9;--lgray:#E7E6E6;--alt:#F4F5FA;--red:#D9534F;
+  --bg:#F4F5FA;--card:#FFFFFF;--ink:#1d1d2b;--muted:#6b6f86;--line:#dfe2ec;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:"Century Gothic","CenturyGothic","AppleGothic","Futura","Segoe UI",sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+button,select,input{font:inherit}
+.strip{height:6px;background:var(--coral)}
+header{background:var(--navy);color:#fff;display:flex;align-items:center;gap:16px;padding:12px 20px;flex-wrap:wrap}
+header h1{font-size:20px;margin:0;font-weight:700;letter-spacing:.2px}
+header .sub{font-size:12px;opacity:.75}
+header .grow{flex:1}
+.btn{border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;padding:7px 12px;border-radius:6px;cursor:pointer;font-size:13px}
+.btn:hover{background:rgba(255,255,255,.12)}
+.btn.solid{background:var(--coral);border-color:var(--coral)}
+.btn.dark{color:var(--navy);border-color:var(--line);background:#fff}
+.btn.dark:hover{background:var(--alt)}
+.notice{background:#FFF4C2;color:#5b4a00;padding:8px 20px;font-size:13px;display:none}
+.notice.show{display:block}
+.drop{position:fixed;inset:0;background:rgba(36,34,105,.85);color:#fff;display:none;align-items:center;justify-content:center;font-size:24px;z-index:50}
+.drop.show{display:flex}
+nav.tabs{display:flex;gap:4px;padding:0 20px;background:#fff;border-bottom:1px solid var(--line);overflow-x:auto}
+nav.tabs button{border:0;background:none;padding:12px 14px;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;font-weight:700;white-space:nowrap}
+nav.tabs button.on{color:var(--navy);border-bottom-color:var(--coral)}
+.filters{display:flex;flex-wrap:wrap;gap:10px;padding:12px 20px;background:var(--lblue);align-items:end}
+.filters label{display:flex;flex-direction:column;font-size:11px;color:var(--navy);font-weight:700;gap:3px}
+.filters select,.filters input{border:1px solid #b9c3de;border-radius:6px;padding:6px 8px;background:#fff;min-width:120px}
+.filters input{min-width:200px}
+main{padding:18px 20px 40px}
+.view{display:none}.view.on{display:block}
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.kpi{border-radius:10px;padding:12px 14px;color:#fff}
+.kpi .l{font-size:12px;opacity:.9;font-weight:700}
+.kpi .v{font-size:26px;font-weight:700;margin-top:4px;font-variant-numeric:tabular-nums}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.card h3{margin:0 0 10px;font-size:14px;color:var(--navy)}
+.empty{color:var(--muted);font-size:13px;padding:20px 0;text-align:center}
+.bars .row{display:grid;grid-template-columns:170px 1fr 70px;gap:8px;align-items:center;margin:5px 0;font-size:12.5px;cursor:pointer}
+.bars .row:hover .name{color:var(--coral)}
+.bars .name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bars .track{height:16px;background:var(--alt);border-radius:4px;display:flex;overflow:hidden}
+.bars .seg{height:100%}
+.bars .num{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:11.5px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+table.t{width:100%;border-collapse:collapse;background:#fff;font-size:12.5px}
+table.t th{background:var(--navy);color:#fff;text-align:left;padding:8px;position:sticky;top:0;cursor:pointer;white-space:nowrap;font-weight:700}
+table.t td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+table.t tr:nth-child(even) td{background:var(--alt)}
+table.t tbody tr{cursor:pointer}
+table.t tbody tr:hover td{background:#e9edf8}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.chip{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap}
+.st-Done{background:var(--green)}.st-Ongoing{background:var(--cyan)}.st-Planned{background:var(--gold);color:var(--navy)}
+.vf-Verified{background:var(--green)}.vf-Pending{background:#FFE9A8;color:var(--navy)}.vf-Rejected{background:var(--red)}
+.tablewrap{max-height:70vh;overflow:auto;border:1px solid var(--line);border-radius:10px}
+.people{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.person h4{margin:0;font-size:16px;color:var(--navy)}
+.person .role{font-size:12px;color:var(--muted)}
+.pk{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}
+.pk div{background:var(--alt);border-radius:6px;padding:6px 8px}
+.pk b{display:block;font-size:17px;color:var(--navy)}
+.pk span{font-size:10.5px;color:var(--muted)}
+.mix{display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--alt);margin:6px 0 10px}
+.person ul{margin:0;padding-left:16px;font-size:12px;color:#333}
+.person li{margin:3px 0}
+.person .acts{display:flex;gap:6px;margin-top:10px}
+aside.drawer{position:fixed;top:0;right:0;height:100%;width:min(480px,100%);background:#fff;box-shadow:-8px 0 30px rgba(0,0,0,.18);transform:translateX(105%);transition:transform .2s;z-index:40;display:flex;flex-direction:column}
+aside.drawer.open{transform:none}
+aside.drawer .dh{background:var(--navy);color:#fff;padding:14px 16px;display:flex;gap:10px;align-items:start}
+aside.drawer .dh h2{font-size:16px;margin:0;flex:1}
+aside.drawer .db{padding:14px 16px;overflow:auto}
+aside.drawer dl{display:grid;grid-template-columns:130px 1fr;gap:8px 10px;margin:0;font-size:13px}
+aside.drawer dt{color:var(--muted);font-weight:700}
+aside.drawer dd{margin:0;white-space:pre-wrap}
+.x{background:none;border:0;color:#fff;font-size:22px;cursor:pointer;line-height:1}
+/* present */
+.pbar{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-bottom:12px}
+.stage{background:#2a2a3a;border-radius:10px;padding:16px;display:flex;justify-content:center;align-items:center;overflow:hidden;position:relative}
+.stage:fullscreen{background:#000;border-radius:0}
+.slidebox{width:1280px;height:720px;transform-origin:top left;position:relative}
+.slide{width:1280px;height:720px;background:#fff;position:relative;overflow:hidden;font-family:"Century Gothic","AppleGothic","Futura",sans-serif}
+.slide.dark{background:var(--navy);color:#fff}
+.slide .stitle{position:absolute;left:0;top:0;right:0;height:92px;background:var(--navy);color:#fff;display:flex;align-items:center;padding:0 56px;font-size:30px;font-weight:700}
+.slide .stitle small{font-size:16px;opacity:.75;margin-left:16px;font-weight:400}
+.slide .sbody{position:absolute;left:56px;right:56px;top:120px;bottom:70px}
+.slide .sfoot{position:absolute;left:56px;bottom:22px;font-size:13px;color:#8a8fa8}
+.slide .slogo{position:absolute;right:40px;bottom:16px}
+.slide .bigk{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;height:100%}
+.slide .bigk div{border-radius:14px;color:#fff;padding:26px 30px;display:flex;flex-direction:column;justify-content:center}
+.slide .bigk b{font-size:58px;line-height:1.1}
+.slide .bigk span{font-size:20px;opacity:.9}
+.slide .cards{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:18px;height:100%}
+.slide .ac{border:1px solid var(--line);border-left:6px solid var(--coral);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:6px;overflow:hidden}
+.slide .ac h5{margin:0;font-size:19px;color:var(--navy);line-height:1.25}
+.slide .ac .meta{font-size:13px;color:var(--muted)}
+.slide .ac p{margin:0;font-size:14.5px;color:#333;line-height:1.35;flex:1;overflow:hidden}
+.slide .ac .tags{display:flex;gap:6px;flex-wrap:wrap}
+.slide .ac .tags span{font-size:12px;font-weight:700;padding:3px 9px;border-radius:10px;background:var(--alt);color:var(--navy)}
+.slide .two{display:grid;grid-template-columns:1fr 1fr;gap:40px;height:100%}
+.slide .two h6{margin:0 0 14px;font-size:18px;color:var(--navy)}
+.slide .bars .row{grid-template-columns:240px 1fr 90px;font-size:16px;margin:9px 0;cursor:default}
+.slide .bars .track{height:24px}
+.slide.dark .ctitle{position:absolute;left:90px;top:250px;font-size:56px;font-weight:700;max-width:900px;line-height:1.15}
+.slide.dark .csub{position:absolute;left:90px;top:400px;font-size:24px;color:#cfd3ec}
+.slide.dark .cdate{position:absolute;left:90px;top:450px;font-size:18px;color:var(--coral)}
+.hint{font-size:12px;color:var(--muted);margin-top:8px}
+@media (max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.bars .row{grid-template-columns:110px 1fr 56px}}
+@media print{
+  @page{size:13.333in 7.5in;margin:0}
+  body{background:#fff}
+  body.printing > *:not(#printArea){display:none!important}
+  #printArea{display:block!important}
+  #printArea .slide{page-break-after:always;break-after:page;width:13.333in;height:7.5in;zoom:1}
+}
+#printArea{display:none}
+</style>
+</head>
+<body>
+<div class="strip"></div>
+<header>
+  <div>
+    <h1>Team Achievements</h1>
+    <div class="sub" id="srcLabel">Maintenance &amp; Automation, Servier Cairo site</div>
+  </div>
+  <div class="grow"></div>
+  <input type="file" id="file" accept=".xlsx" multiple hidden>
+  <button class="btn solid" id="loadBtn">Load Excel file</button>
+  <button class="btn" id="saveBtn" hidden title="Saves a copy of this page with the current data inside, to email or share">Save updated HTML</button>
+  <span id="logoHead"></span>
+</header>
+<div class="notice" id="notice"></div>
+<nav class="tabs" id="tabs">
+  <button data-v="dash" class="on">Dashboard</button>
+  <button data-v="entries">Entries</button>
+  <button data-v="people">People</button>
+  <button data-v="machines">Machines</button>
+  <button data-v="present">Present</button>
+</nav>
+<div class="filters" id="filters">
+  <label>Year<select id="fYear"></select></label>
+  <label>Month<select id="fMonth"></select></label>
+  <label>Member<select id="fMember"></select></label>
+  <label>Building<select id="fBuilding"></select></label>
+  <label>Machine<select id="fMachine"></select></label>
+  <label>Category<select id="fCategory"></select></label>
+  <label>Search<input id="fSearch" placeholder="title, machine, text..."></label>
+  <button class="btn dark" id="resetBtn">Reset</button>
+</div>
+<main>
+  <section class="view on" id="v-dash">
+    <div class="kpis" id="kpis"></div>
+    <div class="grid2">
+      <div class="card"><h3>Entries by member</h3><div id="chMember" class="bars"></div><div class="legend" id="legCat"></div></div>
+      <div class="card"><h3>Work mix by category</h3><div id="chCat" class="bars"></div></div>
+      <div class="card"><h3>Entries and savings by month</h3><div id="chMonth"></div></div>
+      <div class="card"><h3>Top machines</h3><div id="chMach" class="bars"></div></div>
+    </div>
+  </section>
+  <section class="view" id="v-entries">
+    <div class="tablewrap"><table class="t" id="tbl"><thead></thead><tbody></tbody></table></div>
+    <div class="hint" id="entCount"></div>
+  </section>
+  <section class="view" id="v-people"><div class="people" id="peopleGrid"></div></section>
+  <section class="view" id="v-machines">
+    <div class="tablewrap"><table class="t" id="mtbl"><thead></thead><tbody></tbody></table></div>
+  </section>
+  <section class="view" id="v-present">
+    <div class="pbar">
+      <label class="flab">Slides for<br><select id="pScope"></select></label>
+      <button class="btn dark" id="pPrev">&#8592; Prev</button>
+      <span id="pNum" style="padding:8px 4px;color:var(--muted)"></span>
+      <button class="btn dark" id="pNext">Next &#8594;</button>
+      <button class="btn dark" id="pFull">Full screen</button>
+      <button class="btn dark" id="pPrint">Print / save PDF</button>
+    </div>
+    <div class="stage" id="stage"><div class="slidebox" id="slidebox"></div></div>
+    <div class="hint">Slides follow the Year and Month filters. Arrow keys move between slides. For PDF, choose "Save as PDF" in the print window.</div>
+  </section>
+</main>
+<aside class="drawer" id="drawer"><div class="dh"><h2 id="dTitle"></h2><button class="x" id="dClose">&times;</button></div><div class="db" id="dBody"></div></aside>
+<div class="drop" id="drop">Drop the Team_Achievement_Log.xlsx file</div>
+<div id="printArea"></div>
+
+<script id="seed" type="application/json">{"sample": true, "source": "Sample data", "entries": [{"id": "ACH-2026-0020", "date": "2026-01-02T00:00:00", "member": "Technician 1", "role": "Technician", "building": "Utilities", "area": "Utilities", "machine": "Compressed Air", "category": "Achievement", "title": "PM backlog closed", "desc": "Closed all overdue PM orders for the line.", "impact": "Zero overdue PMs", "dt": 0, "sav": 0, "evidence": "", "status": "Done", "verified": "Pending", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-01-02T00:00:00"}, {"id": "ACH-2026-0033", "date": "2026-01-09T00:00:00", "member": "Mo'men Fouad", "role": "Engineer", "building": "Palmier", "area": "Line 3 (R123)", "machine": "CAM M92 blister (L3)", "category": "Project / Installation", "title": "New sensor bracket installed", "desc": "Designed and fitted a bracket for the new sensor.", "impact": "Sensor reads stable", "dt": 0, "sav": 0, "evidence": "2 photos", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-01-09T00:00:00"}, {"id": "ACH-2026-0041", "date": "2026-01-15T00:00:00", "member": "Mo'men Fouad", "role": "Engineer", "building": "Utilities", "area": "Utilities", "machine": "HVAC / AHUs", "category": "Breakdown Fixed", "title": "Vacuum loss fixed on feeding", "desc": "Replaced a cracked vacuum hose and cleaned the filter.", "impact": "Reject rate back to normal", "dt": 3, "sav": 0, "evidence": "2 photos", "status": "Ongoing", "verified": "Pending", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-01-15T00:00:00"}, {"id": "ACH-2026-0014", "date": "2026-01-20T00:00:00", "member": "Technician 1", "role": "Technician", "building": "Acacia", "area": "Capsule filling (R17)", "machine": "MG2 Planeta 100", "category": "Cost Saving", "title": "Gearbox repaired in-house", "desc": "Repaired the gearbox locally instead of ordering a new one.", "impact": "Avoided buying a new unit", "dt": 0, "sav": 22000, "evidence": "WO-000123", "status": "Ongoing", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-01-20T00:00:00"}, {"id": "ACH-2026-0035", "date": "2026-01-21T00:00:00", "member": "Technician 1", "role": "Technician", "building": "Acacia", "area": "Capsule filling (R17)", "machine": "MG2 Planeta 100", "category": "Breakdown Fixed", "title": "Vacuum loss fixed on feeding", "desc": "Replaced a cracked vacuum hose and cleaned the filter.", "impact": "Reject rate back to normal", "dt": 1, "sav": 0, "evidence": "WO-000123", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-01-21T00:00:00"}, {"id": "ACH-2026-0013", "date": "2026-01-25T00:00:00", "member": "Technician 2", "role": "Technician", "building": "Utilities", "area": "Utilities", "machine": "Compressed Air", "category": "Kaizen / Improvement", "title": "Quick-release guard fitted", "desc": "Changed guard fixing to quick-release clamps.", "impact": "Changeover faster", "dt": 3, "sav": 0, "evidence": "WO-000123", "status": "Ongoing", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-01-25T00:00:00"}, {"id": "ACH-2026-0007", "date": "2026-01-28T00:00:00", "member": "Mo'men Fouad", "role": "Engineer", "building": "Palmier", "area": "Line 1 (R117)", "machine": "IMA Flexa cartoner (L1)", "category": "Cost Saving", "title": "Local supplier for sensors", "desc": "Qualified a local equivalent for proximity sensors.", "impact": "Lower spare cost, shorter lead time", "dt": 0, "sav": 8000, "evidence": "", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-01-28T00:00:00"}, {"id": "ACH-2026-0023", "date": "2026-02-03T00:00:00", "member": "Technician 1", "role": "Technician", "building": "Palmier", "area": "Line 3 (R123)", "machine": "CAM M92 blister (L3)", "category": "Cost Saving", "title": "Local supplier for sensors", "desc": "Qualified a local equivalent for proximity sensors.", "impact": "Lower spare cost, shorter lead time", "dt": 0, "sav": 35000, "evidence": "2 photos", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-02-03T00:00:00"}, {"id": "ACH-2026-0017", "date": "2026-02-04T00:00:00", "member": "Mo'men Fouad", "role": "Engineer", "building": "Palmier", "area": "Line 1 (R117)", "machine": "IMA Flexa cartoner (L1)", "category": "Project / Installation", "title": "New sensor bracket installed", "desc": "Designed and fitted a bracket for the new sensor.", "impact": "Sensor reads stable", "dt": 0, "sav": 0, "evidence": "", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-02-04T00:00:00"}, {"id": "ACH-2026-0031", "date": "2026-02-09T00:00:00", "member": "Mo'men Fouad", "role": "Engineer", "building": "Palmier", "area": "Line 3 (R123)", "machine": "CAM M92 blister (L3)", "category": "Kaizen / Improvement", "title": "Changeover checklist simplified", "desc": "Merged steps and added photo guide at the machine.", "impact": "Fewer adjustment errors", "dt": 2, "sav": 0, "evidence": "", "status": "Ongoing", "verified": "Pending", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-02-09T00:00:00"}, {"id": "ACH-2026-0008", "date": "2026-02-19T00:00:00", "member": "Technician 3", "role": "Technician", "building": "Palmier", "area": "Line 1 (R117)", "machine": "IMA Flexa cartoner (L1)", "category": "Energy & Utilities", "title": "Air leak survey and repairs", "desc": "Ultrasonic survey, fixed leaking fittings.", "impact": "Lower compressor load", "dt": 0, "sav": 15000, "evidence": "2 photos", "status": "Done", "verified": "Pending", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-02-19T00:00:00"}, {"id": "ACH-2026-0024", "date": "2026-02-22T00:00:00", "member": "Technician 2", "role": "Technician", "building": "Palmier", "area": "Line 3 (R123)", "machine": "CAM M92 blister (L3)", "category": "Breakdown Fixed", "title": "Main drive alarm cleared", "desc": "Traced the drive fault to a loose encoder cable, re-terminated and tested.", "impact": "Machine back in production same shift", "dt": 5, "sav": 0, "evidence": "", "status": "Ongoing", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-02-22T00:00:00"}, {"id": "ACH-2026-0047", "date": "2026-03-03T00:00:00", "member": "Mo'men Fouad", "role": "Engineer", "building": "Utilities", "area": "Utilities", "machine": "Compressed Air", "category": "GMP / Quality", "title": "Calibration records completed", "desc": "Completed and filed calibration records for the line.", "impact": "Ready for audit", "dt": 0, "sav": 0, "evidence": "2 photos", "status": "Ongoing", "verified": "Pending", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-03-03T00:00:00"}, {"id": "ACH-2026-0037", "date": "2026-03-08T00:00:00", "member": "Mo'men Fouad", "role": "Engineer", "building": "Utilities", "area": "Utilities", "machine": "HVAC / AHUs", "category": "Breakdown Fixed", "title": "Vacuum loss fixed on feeding", "desc": "Replaced a cracked vacuum hose and cleaned the filter.", "impact": "Reject rate back to normal", "dt": 3, "sav": 0, "evidence": "WO-000123", "status": "Done", "verified": "Pending", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-03-08T00:00:00"}, {"id": "ACH-2026-0021", "date": "2026-03-15T00:00:00", "member": "Technician 2", "role": "Technician", "building": "Acacia", "area": "Coating (R22)", "machine": "Manesty Accelacota 350", "category": "Training & Knowledge", "title": "OPL written and trained", "desc": "Wrote a one-point lesson and trained the shift.", "impact": "Operators handle the reset themselves", "dt": 0, "sav": 0, "evidence": "WO-000123", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-03-15T00:00:00"}, {"id": "ACH-2026-0038", "date": "2026-03-15T00:00:00", "member": "Technician 3", "role": "Technician", "building": "Palmier", "area": "Line 1 (R117)", "machine": "IMA Flexa cartoner (L1)", "category": "Beyond Scope", "title": "Supported weekend validation run", "desc": "Stayed on site for the PQ run and handled adjustments.", "impact": "Run finished on schedule", "dt": 0, "sav": 0, "evidence": "WO-000123", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-03-15T00:00:00"}, {"id": "ACH-2026-0001", "date": "2026-03-26T00:00:00", "member": "Technician 1", "role": "Technician", "building": "Utilities", "area": "Utilities", "machine": "Compressed Air", "category": "Energy & Utilities", "title": "Air leak survey and repairs", "desc": "Ultrasonic survey, fixed leaking fittings.", "impact": "Lower compressor load", "dt": 0, "sav": 35000, "evidence": "2 photos", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-03-26T00:00:00"}, {"id": "ACH-2026-0029", "date": "2026-04-11T00:00:00", "member": "Technician 3", "role": "Technician", "building": "Utilities", "area": "Utilities", "machine": "Compressed Air", "category": "Kaizen / Improvement", "title": "Changeover checklist simplified", "desc": "Merged steps and added photo guide at the machine.", "impact": "Fewer adjustment errors", "dt": 5, "sav": 0, "evidence": "2 photos", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-04-11T00:00:00"}, {"id": "ACH-2026-0030", "date": "2026-04-19T00:00:00", "member": "Technician 3", "role": "Technician", "building": "Acacia", "area": "Capsule filling (R17)", "machine": "MG2 Planeta 100", "category": "GMP / Quality", "title": "Calibration records completed", "desc": "Completed and filed calibration records for the line.", "impact": "Ready for audit", "dt": 0, "sav": 0, "evidence": "WO-000123", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-04-19T00:00:00"}, {"id": "ACH-2026-0036", "date": "2026-04-27T00:00:00", "member": "Technician 1", "role": "Technician", "building": "Acacia", "area": "Coating (R22)", "machine": "Manesty Accelacota 350", "category": "Training & Knowledge", "title": "OPL written and trained", "desc": "Wrote a one-point lesson and trained the shift.", "impact": "Operators handle the reset themselves", "dt": 0, "sav": 0, "evidence": "WO-000123", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-04-27T00:00:00"}, {"id": "ACH-2026-0022", "date": "2026-05-02T00:00:00", "member": "Technician 2", "role": "Technician", "building": "Utilities", "area": "Utilities", "machine": "Compressed Air", "category": "Breakdown Fixed", "title": "Main drive alarm cleared", "desc": "Traced the drive fault to a loose encoder cable, re-terminated and tested.", "impact": "Machine back in production same shift", "dt": 1, "sav": 0, "evidence": "2 photos", "status": "Done", "verified": "Pending", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-05-02T00:00:00"}, {"id": "ACH-2026-0019", "date": "2026-05-07T00:00:00", "member": "Mo'men Fouad", "role": "Engineer", "building": "Utilities", "area": "Utilities", "machine": "HVAC / AHUs", "category": "Beyond Scope", "title": "Helped warehouse spare audit", "desc": "Checked bin locations and quantities for critical spares.", "impact": "Stock list corrected", "dt": 0, "sav": 0, "evidence": "", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-05-07T00:00:00"}, {"id": "ACH-2026-0018", "date": "2026-05-17T00:00:00", "member": "Technician 3", "role": "Technician", "building": "Palmier", "area": "Line 1 (R117)", "machine": "IMA Flexa cartoner (L1)", "category": "GMP / Quality", "title": "Calibration records completed", "desc": "Completed and filed calibration records for the line.", "impact": "Ready for audit", "dt": 0, "sav": 0, "evidence": "", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-05-17T00:00:00"}, {"id": "ACH-2026-0028", "date": "2026-06-10T00:00:00", "member": "Mo'men Fouad", "role": "Engineer", "building": "Palmier", "area": "Line 4 (R126)", "machine": "Korber blister (L4)", "category": "Project / Installation", "title": "New sensor bracket installed", "desc": "Designed and fitted a bracket for the new sensor.", "impact": "Sensor reads stable", "dt": 0, "sav": 0, "evidence": "", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-06-10T00:00:00"}, {"id": "ACH-2026-0026", "date": "2026-06-13T00:00:00", "member": "Technician 3", "role": "Technician", "building": "Palmier", "area": "Line 4 (R126)", "machine": "Korber blister (L4)", "category": "Cost Saving", "title": "Gearbox repaired in-house", "desc": "Repaired the gearbox locally instead of ordering a new one.", "impact": "Avoided buying a new unit", "dt": 0, "sav": 35000, "evidence": "WO-000123", "status": "Ongoing", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-06-13T00:00:00"}, {"id": "ACH-2026-0015", "date": "2026-07-06T00:00:00", "member": "Technician 1", "role": "Technician", "building": "Acacia", "area": "Compression (R19)", "machine": "Fette 2 1200i", "category": "Project / Installation", "title": "New sensor bracket installed", "desc": "Designed and fitted a bracket for the new sensor.", "impact": "Sensor reads stable", "dt": 0, "sav": 0, "evidence": "2 photos", "status": "Done", "verified": "Pending", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-07-06T00:00:00"}, {"id": "ACH-2026-0011", "date": "2026-07-14T00:00:00", "member": "Mo'men Fouad", "role": "Engineer", "building": "Palmier", "area": "Line 1 (R117)", "machine": "IMA Flexa cartoner (L1)", "category": "Kaizen / Improvement", "title": "Changeover checklist simplified", "desc": "Merged steps and added photo guide at the machine.", "impact": "Fewer adjustment errors", "dt": 2, "sav": 0, "evidence": "", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-07-14T00:00:00"}, {"id": "ACH-2026-0025", "date": "2026-07-19T00:00:00", "member": "Technician 3", "role": "Technician", "building": "Acacia", "area": "Compression (R19)", "machine": "Fette 2 1200i", "category": "Energy & Utilities", "title": "Air leak survey and repairs", "desc": "Ultrasonic survey, fixed leaking fittings.", "impact": "Lower compressor load", "dt": 0, "sav": 8000, "evidence": "2 photos", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-07-19T00:00:00"}, {"id": "ACH-2026-0009", "date": "2026-07-25T00:00:00", "member": "Mo'men Fouad", "role": "Engineer", "building": "Palmier", "area": "Line 3 (R123)", "machine": "CAM M92 blister (L3)", "category": "Cost Saving", "title": "Local supplier for sensors", "desc": "Qualified a local equivalent for proximity sensors.", "impact": "Lower spare cost, shorter lead time", "dt": 0, "sav": 8000, "evidence": "", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-07-25T00:00:00"}, {"id": "ACH-2026-0042", "date": "2026-07-26T00:00:00", "member": "Mo'men Fouad", "role": "Engineer", "building": "Acacia", "area": "Capsule filling (R17)", "machine": "MG2 Planeta 100", "category": "Energy & Utilities", "title": "Air leak survey and repairs", "desc": "Ultrasonic survey, fixed leaking fittings.", "impact": "Lower compressor load", "dt": 0, "sav": 8000, "evidence": "", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-07-26T00:00:00"}, {"id": "ACH-2026-0012", "date": "2026-07-28T00:00:00", "member": "Technician 1", "role": "Technician", "building": "Acacia", "area": "Capsule filling (R17)", "machine": "MG2 Planeta 100", "category": "Achievement", "title": "PM backlog closed", "desc": "Closed all overdue PM orders for the line.", "impact": "Zero overdue PMs", "dt": 0, "sav": 0, "evidence": "2 photos", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-07-28T00:00:00"}, {"id": "ACH-2026-0027", "date": "2026-08-01T00:00:00", "member": "Mo'men Fouad", "role": "Engineer", "building": "Palmier", "area": "Line 4 (R126)", "machine": "Korber blister (L4)", "category": "Cost Saving", "title": "Gearbox repaired in-house", "desc": "Repaired the gearbox locally instead of ordering a new one.", "impact": "Avoided buying a new unit", "dt": 0, "sav": 15000, "evidence": "2 photos", "status": "Done", "verified": "Pending", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-08-01T00:00:00"}, {"id": "ACH-2026-0048", "date": "2026-08-05T00:00:00", "member": "Technician 3", "role": "Technician", "building": "Acacia", "area": "Capsule filling (R17)", "machine": "MG2 Planeta 100", "category": "GMP / Quality", "title": "Calibration records completed", "desc": "Completed and filed calibration records for the line.", "impact": "Ready for audit", "dt": 0, "sav": 0, "evidence": "WO-000123", "status": "Ongoing", "verified": "Pending", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-08-05T00:00:00"}, {"id": "ACH-2026-0010", "date": "2026-08-06T00:00:00", "member": "Technician 3", "role": "Technician", "building": "Acacia", "area": "Compression (R20)", "machine": "Fette 3 FE55", "category": "Cost Saving", "title": "Gearbox repaired in-house", "desc": "Repaired the gearbox locally instead of ordering a new one.", "impact": "Avoided buying a new unit", "dt": 0, "sav": 15000, "evidence": "WO-000123", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-08-06T00:00:00"}, {"id": "ACH-2026-0039", "date": "2026-08-11T00:00:00", "member": "Technician 2", "role": "Technician", "building": "Utilities", "area": "Utilities", "machine": "HVAC / AHUs", "category": "Breakdown Fixed", "title": "Vacuum loss fixed on feeding", "desc": "Replaced a cracked vacuum hose and cleaned the filter.", "impact": "Reject rate back to normal", "dt": 2, "sav": 0, "evidence": "", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-08-11T00:00:00"}, {"id": "ACH-2026-0004", "date": "2026-08-19T00:00:00", "member": "Technician 2", "role": "Technician", "building": "Utilities", "area": "Utilities", "machine": "Compressed Air", "category": "Beyond Scope", "title": "Supported weekend validation run", "desc": "Stayed on site for the PQ run and handled adjustments.", "impact": "Run finished on schedule", "dt": 0, "sav": 0, "evidence": "", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-08-19T00:00:00"}, {"id": "ACH-2026-0043", "date": "2026-08-19T00:00:00", "member": "Technician 3", "role": "Technician", "building": "Acacia", "area": "Granulation L1 (R06)", "machine": "GEA PMA 800 / FBD 600 (Gran L1)", "category": "Kaizen / Improvement", "title": "Changeover checklist simplified", "desc": "Merged steps and added photo guide at the machine.", "impact": "Fewer adjustment errors", "dt": 1, "sav": 0, "evidence": "", "status": "Ongoing", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-08-19T00:00:00"}, {"id": "ACH-2026-0005", "date": "2026-08-21T00:00:00", "member": "Mo'men Fouad", "role": "Engineer", "building": "Acacia", "area": "Compression (R20)", "machine": "Fette 3 FE55", "category": "Achievement", "title": "PM backlog closed", "desc": "Closed all overdue PM orders for the line.", "impact": "Zero overdue PMs", "dt": 0, "sav": 0, "evidence": "WO-000123", "status": "Ongoing", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-08-21T00:00:00"}, {"id": "ACH-2026-0003", "date": "2026-09-03T00:00:00", "member": "Mo'men Fouad", "role": "Engineer", "building": "Acacia", "area": "Compression (R19)", "machine": "Fette 2 1200i", "category": "Project / Installation", "title": "New sensor bracket installed", "desc": "Designed and fitted a bracket for the new sensor.", "impact": "Sensor reads stable", "dt": 0, "sav": 0, "evidence": "", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-09-03T00:00:00"}, {"id": "ACH-2026-0006", "date": "2026-09-10T00:00:00", "member": "Technician 1", "role": "Technician", "building": "Palmier", "area": "Line 3 (R123)", "machine": "CAM M92 blister (L3)", "category": "Cost Saving", "title": "Local supplier for sensors", "desc": "Qualified a local equivalent for proximity sensors.", "impact": "Lower spare cost, shorter lead time", "dt": 0, "sav": 8000, "evidence": "", "status": "Done", "verified": "Pending", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-09-10T00:00:00"}, {"id": "ACH-2026-0044", "date": "2026-09-17T00:00:00", "member": "Technician 1", "role": "Technician", "building": "Utilities", "area": "Utilities", "machine": "HVAC / AHUs", "category": "Training & Knowledge", "title": "OPL written and trained", "desc": "Wrote a one-point lesson and trained the shift.", "impact": "Operators handle the reset themselves", "dt": 0, "sav": 0, "evidence": "2 photos", "status": "Done", "verified": "Pending", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-09-17T00:00:00"}, {"id": "ACH-2026-0045", "date": "2026-09-17T00:00:00", "member": "Technician 1", "role": "Technician", "building": "Palmier", "area": "Line 4 (R126)", "machine": "Korber blister (L4)", "category": "GMP / Quality", "title": "Calibration records completed", "desc": "Completed and filed calibration records for the line.", "impact": "Ready for audit", "dt": 0, "sav": 0, "evidence": "WO-000123", "status": "Ongoing", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-09-17T00:00:00"}, {"id": "ACH-2026-0002", "date": "2026-09-26T00:00:00", "member": "Mo'men Fouad", "role": "Engineer", "building": "Acacia", "area": "Granulation L1 (R06)", "machine": "GEA PMA 800 / FBD 600 (Gran L1)", "category": "Energy & Utilities", "title": "Air leak survey and repairs", "desc": "Ultrasonic survey, fixed leaking fittings.", "impact": "Lower compressor load", "dt": 0, "sav": 8000, "evidence": "2 photos", "status": "Ongoing", "verified": "Pending", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-09-26T00:00:00"}, {"id": "ACH-2026-0040", "date": "2026-09-26T00:00:00", "member": "Technician 2", "role": "Technician", "building": "Acacia", "area": "Coating (R22)", "machine": "Manesty Accelacota 350", "category": "Beyond Scope", "title": "Helped warehouse spare audit", "desc": "Checked bin locations and quantities for critical spares.", "impact": "Stock list corrected", "dt": 0, "sav": 0, "evidence": "WO-000123", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-09-26T00:00:00"}, {"id": "ACH-2026-0046", "date": "2026-10-13T00:00:00", "member": "Mo'men Fouad", "role": "Engineer", "building": "Utilities", "area": "Utilities", "machine": "HVAC / AHUs", "category": "GMP / Quality", "title": "Calibration records completed", "desc": "Completed and filed calibration records for the line.", "impact": "Ready for audit", "dt": 0, "sav": 0, "evidence": "", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-10-13T00:00:00"}, {"id": "ACH-2026-0034", "date": "2026-11-05T00:00:00", "member": "Mo'men Fouad", "role": "Engineer", "building": "Palmier", "area": "Line 4 (R126)", "machine": "Korber blister (L4)", "category": "Achievement", "title": "PM backlog closed", "desc": "Closed all overdue PM orders for the line.", "impact": "Zero overdue PMs", "dt": 0, "sav": 0, "evidence": "WO-000123", "status": "Ongoing", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-11-05T00:00:00"}, {"id": "ACH-2026-0032", "date": "2026-11-17T00:00:00", "member": "Technician 3", "role": "Technician", "building": "Palmier", "area": "Line 1 (R117)", "machine": "IMA Flexa cartoner (L1)", "category": "Achievement", "title": "PM backlog closed", "desc": "Closed all overdue PM orders for the line.", "impact": "Zero overdue PMs", "dt": 0, "sav": 0, "evidence": "WO-000123", "status": "Done", "verified": "Verified", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-11-17T00:00:00"}, {"id": "ACH-2026-0016", "date": "2026-11-18T00:00:00", "member": "Technician 1", "role": "Technician", "building": "Acacia", "area": "Capsule filling (R17)", "machine": "MG2 Planeta 100", "category": "Beyond Scope", "title": "Supported weekend validation run", "desc": "Stayed on site for the PQ run and handled adjustments.", "impact": "Run finished on schedule", "dt": 0, "sav": 0, "evidence": "", "status": "Ongoing", "verified": "Pending", "verifiedBy": "", "source": "Voice note", "text": "(sample transcript)", "loggedAt": "2026-11-18T00:00:00"}]}</script>
+<script>
+"use strict";
+const CATS=["Achievement","Beyond Scope","Cost Saving","Kaizen / Improvement","Breakdown Fixed","Project / Installation","Safety","GMP / Quality","Energy & Utilities","Training & Knowledge"];
+const CATCOL={"Achievement":"#323C8E","Beyond Scope":"#9B7DCD","Cost Saving":"#F55B41","Kaizen / Improvement":"#91C361","Breakdown Fixed":"#242269","Project / Installation":"#47BFD9","Safety":"#FDC300","GMP / Quality":"#7C8FD0","Energy & Utilities":"#2E9C8A","Training & Knowledge":"#F49A8A"};
+const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const HEAD={"Entry ID":"id","Date":"date","Member":"member","Role":"role","Building":"building","Area / Line":"area","Machine":"machine","Category":"category","Title":"title","What was done":"desc","Impact / Result":"impact","Downtime Saved (h)":"dt","Savings (EGP)":"sav","Evidence (WO / photo / link)":"evidence","Status":"status","Verified":"verified","Verified By":"verifiedBy","Source":"source","Original Text (voice transcript)":"text","Logged At":"loggedAt"};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt=n=>Math.round(n||0).toLocaleString("en-US");
+const fmt1=n=>{n=+n||0;return Number.isInteger(n)?String(n):n.toFixed(1)};
+const dstr=d=>d?d.toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"}):"";
+
+let DB={entries:[],sample:true,source:"",loadedAt:""};
+let sortKey="date",sortDir=-1,slideIdx=0,slides=[];
+
+function logoSVG(onDark,scale){
+  const s=scale||1,txt=onDark?"#fff":"#242269";
+  return `<svg width="${150*s}" height="${40*s}" viewBox="0 0 150 40" aria-label="Servier"><g transform="translate(14,15)">${star("#F55B41",10)}</g><text x="30" y="21" font-family="Century Gothic,AppleGothic,sans-serif" font-weight="700" font-size="17" fill="${txt}" letter-spacing="1">SERVIER</text><text x="31" y="35" font-family="Century Gothic,AppleGothic,sans-serif" font-style="italic" font-size="10" fill="#F55B41">moved by you</text></svg>`;
+}
+function star(c,r){let p=[];for(let i=0;i<16;i++){const a=Math.PI*i/8-Math.PI/2,rr=i%2?r*.42:r;p.push((rr*Math.cos(a)).toFixed(2)+","+(rr*Math.sin(a)).toFixed(2))}return `<polygon points="${p.join(" ")}" fill="${c}"/>`}
+function swoosh(op){return `<svg style="position:absolute;inset:0" width="1280" height="720" viewBox="0 0 1280 720"><path d="M560 720 C 800 520, 1000 300, 1280 140 L1280 230 C 1040 360, 860 560, 700 720 Z" fill="#fff" opacity="${op||.92}"/></svg>`}
+
+/* ---------- xlsx reading (no library) ---------- */
+async function unzip(buf){
+  const dv=new DataView(buf),u8=new Uint8Array(buf);let eocd=-1;
+  for(let i=buf.byteLength-22;i>=Math.max(0,buf.byteLength-66000);i--){if(dv.getUint32(i,true)===0x06054b50){eocd=i;break}}
+  if(eocd<0)throw new Error("Not a valid .xlsx file");
+  const n=dv.getUint16(eocd+10,true);let p=dv.getUint32(eocd+16,true);const files={};const td=new TextDecoder();
+  for(let k=0;k<n;k++){
+    const method=dv.getUint16(p+10,true),csize=dv.getUint32(p+20,true),nl=dv.getUint16(p+28,true),el=dv.getUint16(p+30,true),cl=dv.getUint16(p+32,true),off=dv.getUint32(p+42,true);
+    const name=td.decode(u8.subarray(p+46,p+46+nl));
+    files[name]={method,csize,off};p+=46+nl+el+cl;
+  }
+  return async name=>{
+    const f=files[name];if(!f)return null;
+    const ln=dv.getUint16(f.off+26,true),le=dv.getUint16(f.off+28,true),start=f.off+30+ln+le;
+    const data=u8.subarray(start,start+f.csize);
+    if(f.method===0)return td.decode(data);
+    const ds=new DecompressionStream("deflate-raw");
+    const out=await new Response(new Blob([data]).stream().pipeThrough(ds)).arrayBuffer();
+    return td.decode(out);
+  };
+}
+function xml(s){return new DOMParser().parseFromString(s,"application/xml")}
+function colIdx(ref){let m=ref.match(/^[A-Z]+/)[0],n=0;for(const ch of m)n=n*26+ch.charCodeAt(0)-64;return n}
+function serialToDate(v){if(typeof v!=="number"||!isFinite(v))return null;return new Date(Math.round((v-25569)*86400000)+new Date().getTimezoneOffset()*60000)}
+async function readXlsx(buf){
+  const get=await unzip(buf);
+  const wbx=xml(await get("xl/workbook.xml"));
+  const rels=xml(await get("xl/_rels/workbook.xml.rels"));
+  const relMap={};for(const r of rels.getElementsByTagName("Relationship"))relMap[r.getAttribute("Id")]=r.getAttribute("Target");
+  let target=null;
+  for(const s of wbx.getElementsByTagName("sheet")){if(s.getAttribute("name")==="Log"){const id=s.getAttribute("r:id")||s.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships","id");target=relMap[id]}}
+  if(!target)throw new Error('No sheet named "Log" in this file');
+  target=target.replace(/^\/?xl\//,"").replace(/^\//,"");
+  const ssTxt=await get("xl/sharedStrings.xml");const ss=[];
+  if(ssTxt){for(const si of xml(ssTxt).getElementsByTagName("si")){let t="";for(const x of si.getElementsByTagName("t"))t+=x.textContent;ss.push(t)}}
+  const sh=xml(await get("xl/"+target));const rows=[];
+  for(const r of sh.getElementsByTagName("row")){
+    const rn=+r.getAttribute("r"),cells={};
+    for(const c of r.getElementsByTagName("c")){
+      const t=c.getAttribute("t"),vEl=c.getElementsByTagName("v")[0];let v=null;
+      if(t==="s"&&vEl)v=ss[+vEl.textContent];
+      else if(t==="inlineStr"){v="";for(const x of c.getElementsByTagName("t"))v+=x.textContent}
+      else if(t==="str"||t==="e")v=vEl?vEl.textContent:null;
+      else if(t==="b")v=vEl?vEl.textContent==="1":null;
+      else if(vEl)v=+vEl.textContent;
+      if(v!==null&&v!=="")cells[colIdx(c.getAttribute("r"))]=v;
+    }
+    rows.push({rn,cells});
+  }
+  const hr=rows.find(r=>r.cells[1]==="Entry ID");if(!hr)throw new Error('Header "Entry ID" not found on the Log sheet');
+  const map={};for(const [ci,h] of Object.entries(hr.cells)){if(HEAD[h])map[ci]=HEAD[h]}
+  const out=[];
+  for(const r of rows){
+    if(r.rn<=hr.rn)continue;const e={};
+    for(const [ci,k] of Object.entries(map))e[k]=r.cells[ci];
+    if(!e.id||String(e.id).startsWith("EX-"))continue;
+    e.date=serialToDate(e.date);e.loggedAt=serialToDate(e.loggedAt);
+    e.dt=+e.dt||0;e.sav=+e.sav||0;
+    if(!e.date)e.badDate=true;
+    out.push(e);
+  }
+  return out;
+}
+function fromSeed(s){return (s.entries||[]).map(e=>Object.assign({},e,{date:e.date?new Date(e.date):null,loggedAt:e.loggedAt?new Date(e.loggedAt):null}))}
+
+/* ---------- filters ---------- */
+function opts(sel,values,keep){const cur=keep?sel.value:"All";sel.innerHTML=["All",...values].map(v=>`<option>${esc(v)}</option>`).join("");if([...sel.options].some(o=>o.value===cur))sel.value=cur}
+function uniq(a){return [...new Set(a.filter(v=>v!=null&&v!==""))]}
+function buildFilters(){
+  const E=DB.entries;
+  opts($("#fYear"),uniq(E.map(e=>e.date&&e.date.getFullYear())).sort().map(String),true);
+  opts($("#fMonth"),MONTHS,true);
+  opts($("#fMember"),uniq(E.map(e=>e.member)).sort(),true);
+  opts($("#fBuilding"),uniq(E.map(e=>e.building)).sort(),true);
+  opts($("#fMachine"),uniq(E.map(e=>e.machine)).sort(),true);
+  opts($("#fCategory"),CATS.concat(uniq(E.map(e=>e.category)).filter(c=>!CATS.includes(c))),true);
+}
+function periodFiltered(){
+  const y=$("#fYear").value,m=$("#fMonth").value;
+  return DB.entries.filter(e=>(y==="All"||(e.date&&String(e.date.getFullYear())===y))&&(m==="All"||(e.date&&MONTHS[e.date.getMonth()]===m)));
+}
+function filtered(){
+  const f=k=>$(k).value,q=$("#fSearch").value.trim().toLowerCase();
+  return periodFiltered().filter(e=>(f("#fMember")==="All"||e.member===f("#fMember"))&&(f("#fBuilding")==="All"||e.building===f("#fBuilding"))&&(f("#fMachine")==="All"||e.machine===f("#fMachine"))&&(f("#fCategory")==="All"||e.category===f("#fCategory"))&&(!q||[e.title,e.desc,e.impact,e.machine,e.member,e.text,e.id,e.evidence].join(" ").toLowerCase().includes(q)));
+}
+function stats(E){
+  const n=E.length,done=E.filter(e=>e.status==="Done").length,beyond=E.filter(e=>e.category==="Beyond Scope").length;
+  const sav=E.reduce((a,e)=>a+(+e.sav||0),0),dt=E.reduce((a,e)=>a+(+e.dt||0),0),ver=E.filter(e=>e.verified==="Verified").length;
+  return {n,done,beyond,sav,dt,ver,verPct:n?Math.round(ver*100/n):0};
+}
+function group(E,key){const m=new Map();for(const e of E){const k=e[key]||"(blank)";if(!m.has(k))m.set(k,[]);m.get(k).push(e)}return m}
+
+/* ---------- charts ---------- */
+function stackedBars(el,E,key,limit,onClick){
+  const g=[...group(E,key)].sort((a,b)=>b[1].length-a[1].length).slice(0,limit||99);
+  if(!g.length){el.innerHTML='<div class="empty">No entries for these filters</div>';return}
+  const max=Math.max(...g.map(x=>x[1].length));
+  el.innerHTML=g.map(([k,arr])=>{const segs=CATS.map(c=>{const n=arr.filter(e=>e.category===c).length;return n?`<div class="seg" title="${esc(c)}: ${n}" style="width:${n/max*100}%;background:${CATCOL[c]}"></div>`:""}).join("");
+    return `<div class="row" data-k="${esc(k)}"><div class="name" title="${esc(k)}">${esc(k)}</div><div class="track">${segs}</div><div class="num">${arr.length}</div></div>`}).join("");
+  if(onClick)el.querySelectorAll(".row").forEach(r=>r.onclick=()=>onClick(r.dataset.k));
+}
+function catBars(el,E,onClick){
+  const rows=CATS.map(c=>{const a=E.filter(e=>e.category===c);return [c,a.length,a.reduce((s,e)=>s+(+e.sav||0),0)]}).filter(r=>r[1]);
+  if(!rows.length){el.innerHTML='<div class="empty">No entries for these filters</div>';return}
+  const max=Math.max(...rows.map(r=>r[1]));
+  el.innerHTML=rows.sort((a,b)=>b[1]-a[1]).map(([c,n,s])=>`<div class="row" data-k="${esc(c)}"><div class="name">${esc(c)}</div><div class="track"><div class="seg" style="width:${n/max*100}%;background:${CATCOL[c]}"></div></div><div class="num">${n}${s?` · ${fmt(s/1000)}k`:""}</div></div>`).join("");
+  if(onClick)el.querySelectorAll(".row").forEach(r=>r.onclick=()=>onClick(r.dataset.k));
+}
+function monthChart(E,w,h,big){
+  w=w||560;h=h||230;const pad={l:34,r:44,t:14,b:26};
+  const cnt=new Array(12).fill(0),sav=new Array(12).fill(0);
+  for(const e of E){if(!e.date)continue;const m=e.date.getMonth();cnt[m]++;sav[m]+=+e.sav||0}
+  if(!E.length)return '<div class="empty">No entries for these filters</div>';
+  const mc=Math.max(4,Math.ceil(Math.max(...cnt)/4)*4),ms=Math.max(1,...sav),iw=w-pad.l-pad.r,ih=h-pad.t-pad.b,bw=iw/12;
+  const fs=big?14:10.5;let s=`<svg width="100%" viewBox="0 0 ${w} ${h}" style="max-width:${w}px;display:block">`;
+  for(let i=0;i<=4;i++){const y=pad.t+ih*i/4;s+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${y}" y2="${y}" stroke="#e6e8f0"/><text x="${pad.l-6}" y="${y+4}" font-size="${fs}" fill="#8a8fa8" text-anchor="end">${Math.round(mc*(4-i)/4)}</text>`}
+  cnt.forEach((c,i)=>{const bh=ih*c/mc,x=pad.l+i*bw+bw*.18;s+=`<rect x="${x}" y="${pad.t+ih-bh}" width="${bw*.64}" height="${bh}" rx="3" fill="#323C8E"><title>${MONTHS[i]}: ${c} entries</title></rect><text x="${pad.l+i*bw+bw/2}" y="${h-8}" font-size="${fs}" fill="#6b6f86" text-anchor="middle">${MONTHS[i]}</text>`});
+  if(sav.some(v=>v)){const pts=sav.map((v,i)=>`${pad.l+i*bw+bw/2},${pad.t+ih-ih*v/ms}`).join(" ");s+=`<polyline points="${pts}" fill="none" stroke="#F55B41" stroke-width="2.5"/>`;sav.forEach((v,i)=>{s+=`<circle cx="${pad.l+i*bw+bw/2}" cy="${pad.t+ih-ih*v/ms}" r="3.5" fill="#F55B41"><title>${MONTHS[i]}: ${fmt(v)} EGP</title></circle>`});
+    s+=`<text x="${w-pad.r+6}" y="${pad.t+4}" font-size="${fs}" fill="#F55B41">${fmt(ms/1000)}k</text><text x="${w-pad.r+6}" y="${pad.t+ih}" font-size="${fs}" fill="#F55B41">0</text>`}
+  s+=`</svg><div class="legend"><span><i style="background:#323C8E"></i>Entries</span><span><i style="background:#F55B41"></i>Savings (EGP, right scale)</span></div>`;return s;
+}
+
+/* ---------- views ---------- */
+function kpiHTML(S){return [["Entries logged",fmt(S.n),"#242269"],["Done",fmt(S.done),"#91C361"],["Beyond scope",fmt(S.beyond),"#9B7DCD"],["Savings (EGP)",fmt(S.sav),"#F55B41"],["Downtime saved (h)",fmt1(S.dt),"#323C8E"],["Verified",S.verPct+"%","#47BFD9"]].map(([l,v,c])=>`<div class="kpi" style="background:${c}"><div class="l">${l}</div><div class="v">${v}</div></div>`).join("")}
+function setFilter(id,val){$(id).value=val;render()}
+function renderDash(E){
+  $("#kpis").innerHTML=kpiHTML(stats(E));
+  stackedBars($("#chMember"),E,"member",20,k=>setFilter("#fMember",k));
+  $("#legCat").innerHTML=CATS.map(c=>`<span><i style="background:${CATCOL[c]}"></i>${esc(c)}</span>`).join("");
+  catBars($("#chCat"),E,k=>setFilter("#fCategory",k));
+  $("#chMonth").innerHTML=monthChart(E);
+  stackedBars($("#chMach"),E,"machine",10,k=>setFilter("#fMachine",k));
+}
+const COLS=[["date","Date"],["member","Member"],["machine","Machine"],["category","Category"],["title","Title"],["sav","Savings (EGP)"],["dt","Downtime (h)"],["status","Status"],["verified","Verified"]];
+function renderEntries(E){
+  const A=[...E].sort((a,b)=>{let x=a[sortKey],y=b[sortKey];if(x instanceof Date||y instanceof Date){x=x?+x:0;y=y?+y:0}if(typeof x==="number"||typeof y==="number")return ((+x||0)-(+y||0))*sortDir;return String(x||"").localeCompare(String(y||""))*sortDir});
+  $("#tbl thead").innerHTML="<tr>"+COLS.map(([k,l])=>`<th data-k="${k}">${l}${sortKey===k?(sortDir>0?" ▲":" ▼"):""}</th>`).join("")+"</tr>";
+  $("#tbl tbody").innerHTML=A.map((e,i)=>`<tr data-i="${DB.entries.indexOf(e)}"><td>${dstr(e.date)||'<span style="color:#D9534F">no date</span>'}</td><td>${esc(e.member)}</td><td>${esc(e.machine)}</td><td><span class="chip" style="background:${CATCOL[e.category]||"#888"}">${esc(e.category)}</span></td><td dir="auto">${esc(e.title)}</td><td class="num">${e.sav?fmt(e.sav):""}</td><td class="num">${e.dt?fmt1(e.dt):""}</td><td><span class="chip st-${esc(e.status)}">${esc(e.status||"")}</span></td><td><span class="chip vf-${esc(e.verified)}">${esc(e.verified||"")}</span></td></tr>`).join("")||`<tr><td colspan="9" class="empty">No entries for these filters</td></tr>`;
+  $("#tbl thead").querySelectorAll("th").forEach(th=>th.onclick=()=>{const k=th.dataset.k;sortDir=sortKey===k?-sortDir:(k==="date"||k==="sav"||k==="dt"?-1:1);sortKey=k;renderEntries(E)});
+  $("#tbl tbody").querySelectorAll("tr[data-i]").forEach(tr=>tr.onclick=()=>openDrawer(DB.entries[+tr.dataset.i]));
+  $("#entCount").textContent=`${A.length} entries shown. Click a row for full details.`;
+}
+function openDrawer(e){
+  $("#dTitle").textContent=(e.id||"")+"  "+(e.title||"");
+  const F=[["Date",dstr(e.date)],["Member",(e.member||"")+(e.role?` (${e.role})`:"")],["Building",e.building],["Area / Line",e.area],["Machine",e.machine],["Category",e.category],["What was done",e.desc],["Impact / Result",e.impact],["Downtime saved",e.dt?fmt1(e.dt)+" h":""],["Savings",e.sav?fmt(e.sav)+" EGP":""],["Evidence",e.evidence],["Status",e.status],["Verified",(e.verified||"")+(e.verifiedBy?` by ${e.verifiedBy}`:"")],["Source",e.source],["Original text",e.text],["Logged at",e.loggedAt?e.loggedAt.toLocaleString("en-GB"):""]];
+  $("#dBody").innerHTML="<dl>"+F.filter(f=>f[1]).map(([k,v])=>{const link=/^https?:\/\//.test(v)?`<a href="${esc(v)}" target="_blank" rel="noopener">${esc(v)}</a>`:esc(v);return `<dt>${k}</dt><dd dir="auto">${link}</dd>`}).join("")+"</dl>";
+  $("#drawer").classList.add("open");
+}
+function renderPeople(E){
+  const g=[...group(E,"member")].sort((a,b)=>b[1].length-a[1].length);
+  $("#peopleGrid").innerHTML=g.map(([name,arr])=>{const S=stats(arr),role=(arr.find(e=>e.role)||{}).role||"";
+    const mix=CATS.map(c=>{const n=arr.filter(e=>e.category===c).length;return n?`<div title="${esc(c)}: ${n}" style="width:${n/arr.length*100}%;background:${CATCOL[c]}"></div>`:""}).join("");
+    const top=[...arr].sort((a,b)=>(+b.sav||0)-(+a.sav||0)||(+b.dt||0)-(+a.dt||0)||(b.date||0)-(a.date||0)).slice(0,4);
+    return `<div class="card person"><h4>${esc(name)}</h4><div class="role">${esc(role)}</div>
+      <div class="pk"><div><b>${S.n}</b><span>Entries</span></div><div><b>${S.beyond}</b><span>Beyond scope</span></div><div><b>${S.verPct}%</b><span>Verified</span></div><div><b>${fmt(S.sav)}</b><span>Savings EGP</span></div><div><b>${fmt1(S.dt)}</b><span>Downtime h</span></div><div><b>${S.done}</b><span>Done</span></div></div>
+      <div class="mix">${mix}</div><ul>${top.map(e=>`<li dir="auto">${esc(e.title)} <span style="color:#8a8fa8">(${esc(e.machine||"")})</span></li>`).join("")}</ul>
+      <div class="acts"><button class="btn dark" data-a="list" data-n="${esc(name)}">Entries</button><button class="btn dark" data-a="slides" data-n="${esc(name)}">Slides</button></div></div>`}).join("")||'<div class="empty">No entries for these filters</div>';
+  $("#peopleGrid").querySelectorAll("button").forEach(b=>b.onclick=()=>{if(b.dataset.a==="list"){$("#fMember").value=b.dataset.n;show("entries")}else{show("present");$("#pScope").value="m:"+b.dataset.n;slideIdx=0;renderPresent()}});
+}
+function renderMachines(E){
+  const g=[...group(E,"machine")].sort((a,b)=>b[1].length-a[1].length);
+  $("#mtbl thead").innerHTML="<tr><th>Machine</th><th>Building</th><th>Entries</th><th>Breakdown fixed</th><th>Kaizen</th><th>Savings (EGP)</th><th>Downtime (h)</th><th>Last entry</th><th>Most active</th></tr>";
+  $("#mtbl tbody").innerHTML=g.map(([m,arr])=>{const S=stats(arr),last=arr.reduce((a,e)=>e.date&&(!a||e.date>a)?e.date:a,null);
+    const who=[...group(arr,"member")].sort((a,b)=>b[1].length-a[1].length)[0];
+    return `<tr data-m="${esc(m)}"><td><b>${esc(m)}</b></td><td>${esc((arr[0]||{}).building||"")}</td><td class="num">${S.n}</td><td class="num">${arr.filter(e=>e.category==="Breakdown Fixed").length}</td><td class="num">${arr.filter(e=>e.category==="Kaizen / Improvement").length}</td><td class="num">${S.sav?fmt(S.sav):""}</td><td class="num">${S.dt?fmt1(S.dt):""}</td><td>${dstr(last)}</td><td>${who?esc(who[0])+" ("+who[1].length+")":""}</td></tr>`}).join("")||'<tr><td colspan="9" class="empty">No entries for these filters</td></tr>';
+  $("#mtbl tbody").querySelectorAll("tr[data-m]").forEach(tr=>tr.onclick=()=>{$("#fMachine").value=tr.dataset.m;show("entries")});
+}
+
+/* ---------- present ---------- */
+function periodLabel(){const y=$("#fYear").value,m=$("#fMonth").value;if(y==="All"&&m==="All"){const ds=DB.entries.map(e=>e.date).filter(Boolean).sort((a,b)=>a-b);return ds.length?`${MONTHS[ds[0].getMonth()]} ${ds[0].getFullYear()} to ${MONTHS[ds[ds.length-1].getMonth()]} ${ds[ds.length-1].getFullYear()}`:"All entries"}return (m==="All"?"":m+" ")+(y==="All"?"all years":y)}
+function buildScopeOptions(){
+  const P=periodFiltered(),cur=$("#pScope").value;
+  const mem=uniq(P.map(e=>e.member)).sort(),mac=uniq(P.map(e=>e.machine)).sort();
+  $("#pScope").innerHTML=`<option value="team">Whole team</option><optgroup label="Member">${mem.map(m=>`<option value="m:${esc(m)}">${esc(m)}</option>`).join("")}</optgroup><optgroup label="Machine">${mac.map(m=>`<option value="k:${esc(m)}">${esc(m)}</option>`).join("")}</optgroup>`;
+  if([...$("#pScope").options].some(o=>o.value===cur))$("#pScope").value=cur;
+}
+function scoped(){const v=$("#pScope").value||"team",P=periodFiltered();if(v.startsWith("m:"))return {E:P.filter(e=>e.member===v.slice(2)),name:v.slice(2),kind:"member"};if(v.startsWith("k:"))return {E:P.filter(e=>e.machine===v.slice(2)),name:v.slice(2),kind:"machine"};return {E:P,name:"Maintenance & Automation team",kind:"team"}}
+function frame(title,sub,body,pg){const today=new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});return `<div class="slide"><div class="stitle">${esc(title)}${sub?`<small>${esc(sub)}</small>`:""}</div><div class="sbody">${body}</div><div class="sfoot">${today}  |  ${pg}</div><div class="slogo">${logoSVG(false,1.1)}</div></div>`}
+function acard(e){const tags=[e.machine,e.category,e.sav?fmt(e.sav)+" EGP":"",e.dt?fmt1(e.dt)+" h saved":"",e.verified==="Verified"?"Verified":""].filter(Boolean);return `<div class="ac" style="border-left-color:${CATCOL[e.category]||"#F55B41"}"><h5 dir="auto">${esc(e.title)}</h5><div class="meta">${dstr(e.date)}${e.member?" · "+esc(e.member):""}</div><p dir="auto">${esc(e.impact||e.desc||"")}</p><div class="tags">${tags.map(t=>`<span>${esc(t)}</span>`).join("")}</div></div>`}
+function slideBars(rows,max,color,fmtv){return `<div class="bars">${rows.map(([k,v,c])=>`<div class="row"><div class="name">${esc(k)}</div><div class="track"><div class="seg" style="width:${max?v/max*100:0}%;background:${c||color}"></div></div><div class="num">${fmtv?fmtv(v):v}</div></div>`).join("")}</div>`}
+function makeSlides(){
+  const {E,name,kind}=scoped(),S=stats(E),per=periodLabel(),out=[];
+  out.push(`<div class="slide dark">${swoosh()}<svg style="position:absolute;left:90px;top:190px" width="40" height="40" viewBox="-20 -20 40 40">${star("#F55B41",18)}</svg><div class="ctitle">${kind==="machine"?"Machine work record":"Achievements review"}</div><div class="csub">${esc(name)}</div><div class="cdate">${esc(per)}</div><div style="position:absolute;right:40px;bottom:20px">${logoSVG(true,1.2)}</div></div>`);
+  if(!E.length){out.push(frame("No entries","",`<div class="empty" style="font-size:22px;padding-top:180px">No entries for ${esc(name)} in ${esc(per)}.</div>`,2));return out}
+  const T=[["Entries logged",fmt(S.n),"#242269"],["Done",fmt(S.done),"#91C361"],["Beyond scope",fmt(S.beyond),"#9B7DCD"],["Savings (EGP)",fmt(S.sav),"#F55B41"],["Downtime saved (h)",fmt1(S.dt),"#323C8E"],["Verified",S.verPct+"%","#47BFD9"]];
+  out.push(frame("Summary",name+" · "+per,`<div class="bigk">${T.map(([l,v,c])=>`<div style="background:${c}"><b>${v}</b><span>${l}</span></div>`).join("")}</div>`,0));
+  const cr=CATS.map(c=>[c,E.filter(e=>e.category===c).length,CATCOL[c]]).filter(r=>r[1]).sort((a,b)=>b[1]-a[1]);
+  out.push(frame("Work mix",per,`<div class="two"><div><h6>By category</h6>${slideBars(cr,Math.max(...cr.map(r=>r[1])))}</div><div><h6>By month</h6>${monthChart(E,560,330,true)}</div></div>`,0));
+  const top=[...E].sort((a,b)=>(+b.sav||0)-(+a.sav||0)||(+b.dt||0)-(+a.dt||0)||((b.verified==="Verified")-(a.verified==="Verified"))||(b.date||0)-(a.date||0)).slice(0,6);
+  out.push(frame("Top results","ranked by savings, then downtime saved",`<div class="cards">${top.map(acard).join("")}</div>`,0));
+  const extra=E.filter(e=>e.category==="Beyond Scope"||e.category==="Kaizen / Improvement").sort((a,b)=>(b.date||0)-(a.date||0)).slice(0,6);
+  if(extra.length)out.push(frame("Beyond scope and improvements",`${E.filter(e=>e.category==="Beyond Scope").length} beyond scope, ${E.filter(e=>e.category==="Kaizen / Improvement").length} improvements`,`<div class="cards">${extra.map(acard).join("")}</div>`,0));
+  if(kind==="machine"){
+    const hist=[...E].sort((a,b)=>(b.date||0)-(a.date||0)).slice(0,6);
+    out.push(frame("Latest work on this machine",name,`<div class="cards">${hist.map(acard).join("")}</div>`,0));
+    const mr=[...group(E,"member")].map(([k,a])=>[k,a.length]).sort((a,b)=>b[1]-a[1]);
+    out.push(frame("Who worked on it",name,`<div style="max-width:900px">${slideBars(mr,Math.max(...mr.map(r=>r[1])),"#323C8E")}</div>`,0));
+  }else{
+    const mr=[...group(E,"machine")].map(([k,a])=>[k,a.length]).sort((a,b)=>b[1]-a[1]).slice(0,10);
+    const ms=[...group(E,"machine")].map(([k,a])=>[k,a.reduce((s,e)=>s+(+e.sav||0)+0,0)]).filter(r=>r[1]).sort((a,b)=>b[1]-a[1]).slice(0,10);
+    out.push(frame("Machines",per,`<div class="two"><div><h6>Most entries</h6>${slideBars(mr,Math.max(...mr.map(r=>r[1])),"#323C8E")}</div><div><h6>Most savings (EGP)</h6>${ms.length?slideBars(ms,Math.max(...ms.map(r=>r[1])),"#F55B41",fmt):'<div class="empty">No savings logged</div>'}</div></div>`,0));
+    if(kind==="team"){
+      const pr=[...group(E,"member")].map(([k,a])=>[k,a.length]).sort((a,b)=>b[1]-a[1]);
+      const ps=[...group(E,"member")].map(([k,a])=>[k,stats(a).sav]).sort((a,b)=>b[1]-a[1]);
+      out.push(frame("Team members",per,`<div class="two"><div><h6>Entries</h6>${slideBars(pr,Math.max(...pr.map(r=>r[1])),"#9B7DCD")}</div><div><h6>Savings (EGP)</h6>${slideBars(ps,Math.max(1,...ps.map(r=>r[1])),"#F55B41",fmt)}</div></div>`,0));
+    }
+  }
+  out.push(`<div class="slide dark"><svg style="position:absolute;inset:0" width="1280" height="720" viewBox="0 0 1280 720"><path d="M120 560 C 420 300, 860 300, 1160 170 L1160 230 C 860 360, 440 380, 120 610 Z" fill="#fff" opacity=".92"/></svg><svg style="position:absolute;left:600px;top:250px" width="80" height="80" viewBox="-40 -40 80 80">${star("#F55B41",36)}</svg></div>`);
+  let pg=1;return out.map(s=>s.includes('class="sfoot"')?s.replace(/\|  0<\/div>|\|  2<\/div>/,`|  ${++pg}</div>`):s);
+}
+function fitStage(){const st=$("#stage"),box=$("#slidebox");const fs=document.fullscreenElement===st;const w=st.clientWidth-(fs?0:32),h=fs?st.clientHeight:Math.min(window.innerHeight*0.72,w*9/16);const k=Math.min(w/1280,h/720);box.style.transform=`scale(${k})`;box.style.width="1280px";box.style.height="720px";st.style.height=(fs?"100%":(720*k+32)+"px");box.style.marginRight=(1280*k-1280)+"px";box.style.marginBottom=(720*k-720)+"px"}
+function renderPresent(){buildScopeOptions();slides=makeSlides();slideIdx=Math.min(slideIdx,slides.length-1);$("#slidebox").innerHTML=slides[slideIdx];$("#pNum").textContent=`${slideIdx+1} / ${slides.length}`;fitStage()}
+function go(d){slideIdx=Math.max(0,Math.min(slides.length-1,slideIdx+d));$("#slidebox").innerHTML=slides[slideIdx];$("#pNum").textContent=`${slideIdx+1} / ${slides.length}`}
+
+/* ---------- glue ---------- */
+let current="dash";
+function show(v){current=v;document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));document.querySelectorAll(".view").forEach(s=>s.classList.toggle("on",s.id==="v-"+v));render()}
+function render(){
+  const E=filtered();
+  if(current==="dash")renderDash(E);else if(current==="entries")renderEntries(E);else if(current==="people")renderPeople(E);else if(current==="machines")renderMachines(E);else if(current==="present")renderPresent();
+  const bad=DB.entries.filter(e=>e.badDate).length;
+  const n=$("#notice");
+  if(DB.sample){n.textContent="Sample data for preview. Load one or more Log .xlsx files (hold Ctrl or select several) to see real entries.";n.classList.add("show")}
+  else if(bad){n.textContent=`${bad} rows on the Log have no real date and are left out of month and year views. Fix the Date cells in Excel.`;n.classList.add("show")}
+  else n.classList.remove("show");
+}
+function setData(entries,source,sample){DB={entries,sample:!!sample,source,loadedAt:new Date().toISOString()};$("#srcLabel").textContent=sample?"Sample data":`${source} · ${entries.length} entries · loaded ${new Date().toLocaleString("en-GB")}`;buildFilters();render()}
+async function loadFiles(list){
+  const files=[...list].filter(f=>/\.xlsx$/i.test(f.name));if(!files.length){alert("Choose one or more .xlsx files");return}
+  let all=[],bad=[];
+  for(const f of files){try{const E=await readXlsx(await f.arrayBuffer());const tag=f.name.replace(/\.xlsx$/i,"");E.forEach(e=>{if(!e.member)e.member=tag});all=all.concat(E)}catch(err){bad.push(f.name+": "+err.message)}}
+  if(bad.length)alert("Could not read:\n"+bad.join("\n"));
+  {const seen=new Set();all=all.filter(e=>{const k=[e.member,e.id,e.date&&+e.date,e.title].join("|");if(seen.has(k))return false;seen.add(k);return true})}
+  if(all.length||!bad.length)setData(all,files.length===1?files[0].name:files.length+" files",false);
+}
+function loadMine(){
+  try{const r=JSON.parse(localStorage.getItem("wl.v1"));if(!r||!Array.isArray(r.entries))return false;
+    const p=r.profile||{};const E=r.entries.map(e=>{const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(e.date||"");return Object.assign({},e,{member:p.name||"Me",role:p.role||"",verified:"Pending",date:m?new Date(+m[1],+m[2]-1,+m[3]):null,loggedAt:e.loggedAt?new Date(e.loggedAt):null,dt:+e.dt||0,sav:+e.sav||0})});
+    setData(E,"My phone data ("+(p.name||"")+")",false);return true}catch(e){return false}
+}
+$("#loadBtn").onclick=()=>$("#file").click();
+$("#file").onchange=e=>{if(e.target.files.length)loadFiles(e.target.files);e.target.value=""};
+let dragN=0;
+addEventListener("dragenter",e=>{e.preventDefault();dragN++;$("#drop").classList.add("show")});
+addEventListener("dragleave",e=>{dragN--;if(dragN<=0){$("#drop").classList.remove("show");dragN=0}});
+addEventListener("dragover",e=>e.preventDefault());
+addEventListener("drop",e=>{e.preventDefault();dragN=0;$("#drop").classList.remove("show");if(e.dataTransfer.files.length)loadFiles(e.dataTransfer.files)});
+document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>show(b.dataset.v));
+["#fYear","#fMonth","#fMember","#fBuilding","#fMachine","#fCategory"].forEach(id=>$(id).onchange=()=>{slideIdx=0;render()});
+$("#fSearch").oninput=render;
+$("#resetBtn").onclick=()=>{["#fYear","#fMonth","#fMember","#fBuilding","#fMachine","#fCategory"].forEach(id=>$(id).value="All");$("#fSearch").value="";render()};
+$("#dClose").onclick=()=>$("#drawer").classList.remove("open");
+$("#pScope").onchange=()=>{slideIdx=0;renderPresent()};
+$("#pPrev").onclick=()=>go(-1);$("#pNext").onclick=()=>go(1);
+$("#pFull").onclick=()=>{const st=$("#stage");if(document.fullscreenElement)document.exitFullscreen();else st.requestFullscreen&&st.requestFullscreen()};
+document.addEventListener("fullscreenchange",()=>setTimeout(fitStage,50));
+addEventListener("resize",()=>{if(current==="present")fitStage()});
+addEventListener("keydown",e=>{if(e.key==="Escape")$("#drawer").classList.remove("open");if(current!=="present"||/INPUT|SELECT/.test(document.activeElement.tagName))return;if(e.key==="ArrowRight"||e.key==="PageDown"||e.key===" "){e.preventDefault();go(1)}if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();go(-1)}});
+$("#pPrint").onclick=()=>{$("#printArea").innerHTML=slides.join("");document.body.classList.add("printing");setTimeout(()=>{window.print();document.body.classList.remove("printing")},100)};
+if(location.protocol==="file:")$("#saveBtn").hidden=false;
+$("#saveBtn").onclick=()=>{
+  const data=JSON.stringify({sample:DB.sample,source:DB.source,entries:DB.entries}).replace(/</g,"\\u003c");
+  const seedEl=document.getElementById("seed");const html="<!doctype html>\n"+document.documentElement.outerHTML.replace(seedEl.outerHTML,`<script id="seed" type="application/json">${data}<\/script>`);
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([html],{type:"text/html"}));a.download="Team_Achievement_Viewer.html";a.click();
+};
+$("#logoHead").innerHTML=`<span style="background:#fff;border-radius:6px;padding:2px 6px;display:inline-block">${logoSVG(false,.9)}</span>`;
+if(location.hash==="#mine"&&!loadMine())setTimeout(()=>alert("No app data found in this browser. Open this page from inside the installed app (same icon you log work with)."),300);
+if(!(location.hash==="#mine"&&loadMine())){try{const s=JSON.parse(document.getElementById("seed").textContent);setData(fromSeed(s),s.source||"",s.sample)}catch(e){setData([],"",true)}}
+</script>
+</body>
+</html>
